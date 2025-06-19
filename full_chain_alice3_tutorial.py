@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+# Author: Pavel Larionov
+# Email:  pavel.larionov@cern.ch
+# Event:  ACTS Tutorial, June '25
+
 from acts.examples.reconstruction import (
     addSeeding,
     CkfConfig,

@@ -1,3 +1,7 @@
+// Author: Pavel Larionov
+// Email:  pavel.larionov@cern.ch
+// Event:  ACTS Tutorial, June '25
+
 #include "TreeReader.h"
 #include "TTree.h"
 #include "TH1F.h"

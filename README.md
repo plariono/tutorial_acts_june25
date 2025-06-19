@@ -51,3 +51,10 @@ root -l -q 'getPtResolution.C+g("reco_output_pythia")'
 ```
 
 This will create the folders ```Plots``` and ```treeoutput``` in ```reco_output_pythia``` which contain the figure and the ROOT with the $\it{p}_{\rm{T}}$ resolution.
+
+# Get the reconstruction efficiency 
+
+The reconstruction efficiency histogram can be found in ```reco_output_pythia/performance_finding_ambi.root``` as a TEfficiency object:
+``` trackeff_vs_pT```,``` trackeff_vs_eta```, ``` trackeff_vs_phi```.
+
+The binning can be changed my modifying ```source/Examples/Framework/src/Validation/EffPlotTool.cpp```.
