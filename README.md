@@ -13,7 +13,12 @@ lrnvmbp14@macbookpro ~ % ssh [your username]@lxplus.cern.ch
 [plariono@lxplus986 actsdir]$ git clone git@github.com:acts-project/acts.git source && cd source
 [plariono@lxplus986 source]$ git fetch origin —-tags
 [plariono@lxplus986 source]$ git switch tags/v40.1.0 -c mybranch-v40
-[plariono@lxplus986 actsdir]$ source source/CI/setup_cvmfs_lcg.sh
+```
+Then the dependencies can be satisfied via an LCG release in the following way: 
+`source /cvmfs/sft.cern.ch/lcg/views/<lcg_release>/<lcg_platform>/setup.sh`
+
+```
+[plariono@lxplus986 actsdir]$ source /cvmfs/sft.cern.ch/lcg/views/LCG_107/x86_64-el9-gcc13-opt/setup.sh
 [plariono@lxplus986 actsdir]$ mkdir acts
 [plariono@lxplus986 actsdir]$ cmake -S source -B acts -DACTS_BUILD_PLUGIN_GEANT4=on -DACTS_BUILD_PLUGIN_TGEO=on -DACTS_BUILD_FATRAS=on -DACTS_BUILD_FATRAS_GEANT4=on -DACTS_BUILD_EXAMPLES_GEANT4=on -DACTS_BUILD_EXAMPLES_PYTHON_BINDINGS=on -DACTS_BUILD_ANALYSIS_APPS=on -DACTS_BUILD_EXAMPLES_PYTHIA8=on
 [plariono@lxplus986 actsdir]$ cmake —build acts -j$nproc
