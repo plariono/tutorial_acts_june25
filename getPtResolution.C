@@ -240,10 +240,12 @@ TH1F *GetResolutionHisto(TH2F *inHist, const float &fitRangeSigma, const std::st
 
     canvfit->SaveAs(Form("%s/fit_%s_res_vs_%s.pdf]", plotsDir.c_str(), paramStr.c_str(), axisStr.c_str()));
 
-    return outHist;
+    TH1F *result = outHist;
 
     delete gfnc;
     delete canvfit;
+
+    return result;
 }
 
 void plotHist(TH1F *input, const std::string &canvTitle, const std::string &yAxisTitle, const std::string &xAxisLabel, const std::string &plotsDir, bool xlog, bool ylog, float yAxisMin, float yAxisMax, float rngmin, float rngmax)
