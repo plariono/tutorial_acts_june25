@@ -32,9 +32,11 @@ aliBuild -d build ACTS
 ## Fixing potential issues with the aliBuild installation (M. Faggin)
 
 Issue: `ImportError: libHepMC3.so.4: cannot open shared object file: No such file or directory`
+
 Fix: `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"/path-to-HepMC3/3.3.0-44/lib"`
 
 Issue: Missing or not found Boost package
+
 Fix: Install Boost or edit the $PATH: `export PATH=$PATH:"/path-to-boost/v1.83.0-alice2-local1/include"`
 
 When the installation is completed you can pull the tutorial repository and place it in ```actsdir```.
