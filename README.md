@@ -23,12 +23,20 @@ Then the dependencies can be satisfied via an LCG release in the following way:
 [plariono@lxplus986 actsdir]$ cmake -S source -B acts -DACTS_BUILD_PLUGIN_GEANT4=on -DACTS_BUILD_PLUGIN_TGEO=on -DACTS_BUILD_FATRAS=on -DACTS_BUILD_FATRAS_GEANT4=on -DACTS_BUILD_EXAMPLES_GEANT4=on -DACTS_BUILD_EXAMPLES_PYTHON_BINDINGS=on -DACTS_BUILD_ANALYSIS_APPS=on -DACTS_BUILD_EXAMPLES_PYTHIA8=on
 [plariono@lxplus986 actsdir]$ cmake —build acts -j$nproc
 ```
-# ACTS alibuild installation:
+# ACTS aliBuild installation:
 ```
 aliBuild init
 git clone git@github.com:AliceO2Group/acts.git
 aliBuild -d build ACTS
 ```
+## Fixing potential issues with the aliBuild installation
+
+Issue: `ImportError: libHepMC3.so.4: cannot open shared object file: No such file or directory`
+Fix: `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"/path-to-HepMC3/3.3.0-44/lib"`
+
+Issue: Missing or not found Boost package
+Fix: Install Boost or edit the $PATH: `export PATH=$PATH:"/path-to-boost/v1.83.0-alice2-local1/include"`
+
 When the installation is completed you can pull the tutorial repository and place it in ```actsdir```.
 
 # IMPORTANT: 
