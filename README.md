@@ -29,7 +29,7 @@ aliBuild init
 git clone git@github.com:AliceO2Group/acts.git
 aliBuild -d build ACTS
 ```
-## Fixing potential issues with the aliBuild installation
+## Fixing potential issues with the aliBuild installation (M. Faggin)
 
 Issue: `ImportError: libHepMC3.so.4: cannot open shared object file: No such file or directory`
 Fix: `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"/path-to-HepMC3/3.3.0-44/lib"`
