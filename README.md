@@ -1,6 +1,20 @@
 # tutorial_acts_june25
 ACTS Tutorial June 25
 
+# Update 17.07.25: quick fix of the geometry issue
+In order to fix the issue with the IRIS geometry you need to replace the `toSurface` method in `source/Plugins/TGeo/include/Acts/Plugins/TGeo/TGeoSurfaceConverter.hpp` in the follwing way: 
+
+```
+#include "Acts/Definitions/Units.hpp"
+#include "Acts/Utilities/detail/periodic.hpp"
+
+static double toRadian(double degree) {
+    return detail::radian_sym(degree * UnitConstants::degree);
+  }
+```
+
+After that a recompilation is needed.
+
 ## Instructions how to run the full chain simulation and reconstruction.
 
 Full ACTS documentation is located [here](https://acts.readthedocs.io/en/latest/).
