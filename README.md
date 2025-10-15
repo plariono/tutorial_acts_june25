@@ -55,8 +55,15 @@ Fix: Install Boost or edit the $PATH: `export PATH=$PATH:"/path-to-boost/v1.83.0
 
 When the installation is completed you can pull the tutorial repository and place it in ```actsdir```.
 
-# IMPORTANT: 
-due to file size limitations the material-map.json file must be downloaded separately from:
+# Material maps: 
+Due to file size limitations the material-map.json file must be downloaded separately.
+
+## IRIS 4 geometry
+
+https://cernbox.cern.ch/s/YRENeDj54FZzLTf
+After that the file must be placed in ```actsdir/tutorial_acts_june25/geom/iris4```. 
+
+## Legacy segmented geometry
 https://cernbox.cern.ch/s/t8ZTuM5vZuehFkY
 
 After that the file must be placed in ```actsdir/tutorial_acts_june25/geom/iris_segm_june25```. 
