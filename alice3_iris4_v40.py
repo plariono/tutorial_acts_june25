@@ -99,14 +99,14 @@ def buildALICE3Geometry(
     geo_dir: Path,
     material: bool = False,
     jsonconfig: bool = False,
-    logLevel=acts.logging.VERBOSE,
+    logLevel=acts.logging.DEBUG,
     matDeco=None
 ):
 
     logger = acts.logging.getLogger("buildALICE3Geometry")
 
     if material:
-        file = geo_dir / "acts/bin/geom/iris4/material-map.json"
+        file = geo_dir / "tutorial_acts_june25/geom/iris4/material-map.json"
         logger.info("Adding material from %s", file.absolute())
         matDeco = acts.IMaterialDecorator.fromFile(
             file,
@@ -115,7 +115,7 @@ def buildALICE3Geometry(
         )
 
     tgeo_fileName = geo_dir / \
-        "acts/bin/geom/iris4/o2sim_geometry.root"
+        "tutorial_acts_june25/geom/iris4/o2sim_geometry.root"
 
     if jsonconfig:
         jsonFile = geo_dir / "acts/bin/tgeo-config.json"

@@ -46,7 +46,7 @@ import acts.examples
 
 import array as arr
 
-import alice3_iris_segm_june25_v40 as alice3_geometry
+import alice3_iris4_v40 as alice3_geometry
 
 from acts import UnitConstants as u
 from acts.examples import RootParticleReader
