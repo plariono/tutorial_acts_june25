@@ -60,7 +60,7 @@ Due to file size limitations the material-map.json file must be downloaded separ
 
 ## IRIS 4 geometry
 
-https://cernbox.cern.ch/s/YRENeDj54FZzLTf
+https://cernbox.cern.ch/s/IcBXKkxEgaxvyLt
 
 After that the file must be placed in ```actsdir/tutorial_acts_june25/geom/iris4```. 
 
