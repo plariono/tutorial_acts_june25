@@ -64,10 +64,10 @@ https://cernbox.cern.ch/s/IcBXKkxEgaxvyLt
 
 After that the file must be placed in ```actsdir/tutorial_acts_june25/geom/iris4```. 
 
-## Legacy segmented geometry
-https://cernbox.cern.ch/s/t8ZTuM5vZuehFkY
+## Geometry version Oct24, IRIS pure cylindrical
+https://cernbox.cern.ch/s/PpjPUjx1F3HACFC
 
-After that the file must be placed in ```actsdir/tutorial_acts_june25/geom/iris_segm_june25```. 
+After that the file must be placed in ```actsdir/tutorial_acts_june25/geom/geom_oct24```. 
 
 # Running the full chain simulation and reconstruction on lxplus
 
