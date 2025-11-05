@@ -1,7 +1,6 @@
-# tutorial_acts_june25
-ACTS Tutorial June 25
+# ACTS Tutorial for ALICE 3 studies
 
-# Update 17.07.25: quick fix of the geometry issue
+## Update 17.07.25: quick fix of the geometry issue
 In order to fix the issue with the IRIS geometry you need to replace the `toSurface` method in `source/Plugins/TGeo/include/Acts/Plugins/TGeo/TGeoSurfaceConverter.hpp` in the follwing way: 
 
 ```
