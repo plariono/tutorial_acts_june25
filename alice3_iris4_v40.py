@@ -3,22 +3,30 @@ import sys
 from pathlib import Path
 import argparse
 
+from acts.examples.tgeo import TGeoDetector, Interval
+
+from zipfile import ZipFile
+
 from acts.examples import (
-    TGeoDetector,
+#    TGeoDetector,
     WhiteBoard,
     AlgorithmContext,
     ProcessCode,
     CsvTrackingGeometryWriter,
     ObjTrackingGeometryWriter,
+)
+
+from acts.examples.json import (
     JsonSurfacesWriter,
     JsonMaterialWriter,
     JsonFormat,
-    Interval,
 )
+
 
 import acts
 
-from acts import MaterialMapJsonConverter, UnitConstants as u
+from acts.json import MaterialMapJsonConverter
+from acts import UnitConstants as u
 
 
 def runALICE3(
@@ -104,9 +112,23 @@ def buildALICE3Geometry(
 ):
 
     logger = acts.logging.getLogger("buildALICE3Geometry")
-
+    
     if material:
         file = geo_dir / "tutorial_acts_june25/geom/iris4/material-map.json"
+        zip_file = geo_dir / "tutorial_acts_june25/geom/iris4/material-map-iris4.json.zip"
+
+        # check if JSON exists
+        if not file.exists():
+            # check if ZIP exists
+            if zip_file.exists():
+                # unzip
+                with ZipFile(zip_file, 'r') as zip_ref:
+                    zip_ref.extractall(file.parent)
+                    print(f"Extracted {file} from {zip_file}")
+            else:
+                
+                raise FileNotFoundError(f"Neither {json_file} nor {zip_file} exists!")
+                
         logger.info("Adding material from %s", file.absolute())
         matDeco = acts.IMaterialDecorator.fromFile(
             file,
