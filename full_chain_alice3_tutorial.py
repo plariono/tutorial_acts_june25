@@ -49,7 +49,7 @@ import array as arr
 import alice3_iris4_v40 as alice3_geometry
 
 from acts import UnitConstants as u
-from acts.examples import RootParticleReader
+from acts.examples.root import RootParticleReader
 
 parser = argparse.ArgumentParser(
     description="Full chain with the ALICE3 tracker")
@@ -118,7 +118,8 @@ detector = alice3_geometry.buildALICE3Geometry(
 trackingGeometry = detector.trackingGeometry()
 decorators = detector.contextDecorators()
 
-field = acts.ConstantBField(acts.Vector3(0.0, 0.0, bFieldZ * u.T)) if not useFieldMap else acts.examples.MagneticFieldMapRz(
+#print ("PF:: Magnetic field map", tutorial_dir._str +"/"+"fieldmaps"+"/"+ fieldmapName)
+field = acts.ConstantBField(acts.Vector3(0.0, 0.0, bFieldZ * u.T)) if not useFieldMap else acts.MagneticFieldMapRz(
     str(tutorial_dir / "fieldmaps" / fieldmapName))
 rnd = acts.examples.RandomNumbers(seed=42)
 
