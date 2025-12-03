@@ -26,23 +26,21 @@ jobs:
       with:
         release-platform: ${{ matrix.LCG }}
         ccache-key: ccache-el9-${{ matrix.LCG }}
-
-    - name: "Checkout and compile ACTS"
-      run: |
-        echo "::group:: Checkout ACTS"
-        git clone https://github.com/acts-project/acts.git
-        cd acts
-        mkdir -p build
-        cd build
-        echo "::group:: ACTS Cmake"
-        cmake -DACTS_BUILD_PLUGIN_GEANT4=on \
-        -DACTS_BUILD_PLUGIN_TGEO=on \
-        -DACTS_BUILD_FATRAS=on \
-        -DACTS_BUILD_FATRAS_GEANT4=on \
-        -DACTS_BUILD_EXAMPLES_GEANT4=on \
-        -DACTS_BUILD_EXAMPLES_PYTHON_BINDINGS=on \
-        -DACTS_BUILD_ANALYSIS_APPS=on \
-        -DACTS_BUILD_EXAMPLES_PYTHIA8=on ..
-        echo "::grou:: BUILD ACTS"
-        make
+        run: |
+          echo "::group:: Checkout ACTS"
+          git clone https://github.com/acts-project/acts.git
+          cd acts
+          mkdir -p build
+          cd build
+          echo "::group:: ACTS Cmake"
+          cmake -DACTS_BUILD_PLUGIN_GEANT4=on \
+          -DACTS_BUILD_PLUGIN_TGEO=on \
+          -DACTS_BUILD_FATRAS=on \
+          -DACTS_BUILD_FATRAS_GEANT4=on \
+          -DACTS_BUILD_EXAMPLES_GEANT4=on \
+          -DACTS_BUILD_EXAMPLES_PYTHON_BINDINGS=on \
+          -DACTS_BUILD_ANALYSIS_APPS=on \
+          -DACTS_BUILD_EXAMPLES_PYTHIA8=on ..
+          echo "::grou:: BUILD ACTS"
+          make
 
