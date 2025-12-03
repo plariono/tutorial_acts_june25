@@ -2,7 +2,7 @@ name: run_test
 
 on:
   schedule:
-  
+    - cron: "0 3 * * *"   # Runs daily at 03:00 UTC  
   workflow_dispatch:
 
 
@@ -41,7 +41,7 @@ jobs:
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
           -DACTS_BUILD_EXAMPLES_PYTHIA8=on ..
           echo "::group:: BUILD ACTS"
-          cmake —build acts/build
+          cmake --build acts/build
           echo "::group:: Setup ACTS"
           source acts/build/this_acts.sh
           source acts/build/python/setup.sh
