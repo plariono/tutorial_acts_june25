@@ -28,9 +28,6 @@ jobs:
         run: |
           echo "::group:: Checkout ACTS"
           git clone https://github.com/acts-project/acts.git
-#          cd acts
-#          mkdir -p build
-#          cd build
           echo "::group:: ACTS Cmake"
           cmake -S acts -B acts/build -DACTS_BUILD_PLUGIN_GEANT4=on \
           -DACTS_BUILD_PLUGIN_ROOT=on \
@@ -46,7 +43,6 @@ jobs:
           echo "::group:: Setup ACTS"
           source acts/build/this_acts.sh
           source acts/build/python/setup.sh
-#          cd ..
           export ACTS_SEQUENCER_DISABLE_FPEMON=1
           echo "::group:: Run Alice3 single particle test"
           python full_chain_alice3_tutorial.py -n 100
