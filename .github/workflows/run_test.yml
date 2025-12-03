@@ -39,7 +39,7 @@ jobs:
           -DACTS_BUILD_EXAMPLES_PYTHON_BINDINGS=on \
           -DACTS_BUILD_ANALYSIS_APPS=on \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-          -DACTS_BUILD_EXAMPLES_PYTHIA8=on ..
+          -DACTS_BUILD_EXAMPLES_PYTHIA8=on
           echo "::group:: BUILD ACTS"
           cmake --build acts/build
           echo "::group:: Setup ACTS"
