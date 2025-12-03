@@ -1,3 +1,7 @@
+![run_test](https://github.com/plariono/tutorial_acts_june_25/actions/workflows/run_test.yml/badge.svg)
+
+
+
 # ACTS Tutorial for ALICE 3 studies
 
 ## Instructions how to run the full chain simulation and reconstruction.
