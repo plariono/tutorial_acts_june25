@@ -29,25 +29,19 @@ jobs:
 
     - name: "Checkout and compile ACTS"
       run: |
-        echo "Checkout ACTS"
-
-
-
-
-#      run: |
-#	echo "::group:: Checkout ACTS"
-#	git clone https://github.com/acts-project/acts.git
-#	mkdir -p build
-#	cd build
-#	echo "::group:: ACTS Cmake"
-#	cmake -DACTS_BUILD_PLUGIN_GEANT4=on \
-#	-DACTS_BUILD_PLUGIN_TGEO=on \
-#	-DACTS_BUILD_FATRAS=on \
-#	-DACTS_BUILD_FATRAS_GEANT4=on \
-#	-DACTS_BUILD_EXAMPLES_GEANT4=on \
-#	-DACTS_BUILD_EXAMPLES_PYTHON_BINDINGS=on \
-#	-DACTS_BUILD_ANALYSIS_APPS=on \
-#	-DACTS_BUILD_EXAMPLES_PYTHIA8=on ..
-#	echo "::grou:: BUILD ACTS"
-#	make
+        echo "::group:: Checkout ACTS"
+        git clone https://github.com/acts-project/acts.git
+        mkdir -p build
+        cd build
+        echo "::group:: ACTS Cmake"
+        cmake -DACTS_BUILD_PLUGIN_GEANT4=on \
+        -DACTS_BUILD_PLUGIN_TGEO=on \
+        -DACTS_BUILD_FATRAS=on \
+        -DACTS_BUILD_FATRAS_GEANT4=on \
+        -DACTS_BUILD_EXAMPLES_GEANT4=on \
+        -DACTS_BUILD_EXAMPLES_PYTHON_BINDINGS=on \
+        -DACTS_BUILD_ANALYSIS_APPS=on \
+        -DACTS_BUILD_EXAMPLES_PYTHIA8=on ..
+        echo "::grou:: BUILD ACTS"
+        make
 
