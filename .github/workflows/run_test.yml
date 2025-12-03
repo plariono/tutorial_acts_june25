@@ -41,7 +41,7 @@ jobs:
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
           -DACTS_BUILD_EXAMPLES_PYTHIA8=on
           echo "::group:: BUILD ACTS"
-          cmake --build acts/build
+          cmake --build acts/build -- -j$(nproc)
           echo "::group:: Setup ACTS"
           source acts/build/this_acts.sh
           source acts/build/python/setup.sh
