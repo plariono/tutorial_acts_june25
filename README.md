@@ -1,4 +1,4 @@
-[![run_test](https://github.com/AIDASoft/podio/actions/workflows/test.yml/badge.svg)](https://github.com/AIDASoft/podio/actions/workflows/test.yml)
+[![run_test](https://github.com/AIDASoft/podio/actions/workflows/test.yml/badge.svg)](https://github.com/plariono/tutorial_acts_june25/actions/workflows/run_test.yml)
 
 
 
