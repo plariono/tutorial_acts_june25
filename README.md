@@ -1,4 +1,4 @@
-[![run_test](https://github.com/plariono/tutorial_acts_june25/actions/workflows/run_test.yml/badge.svg)](https://github.com/plariono/tutorial_acts_june25/actions/workflows/run_test.yml)
+[![LCG108/gcc14-LCG107/gcc13](https://github.com/plariono/tutorial_acts_june25/actions/workflows/run_test.yml/badge.svg)](https://github.com/plariono/tutorial_acts_june25/actions/workflows/run_test.yml)
 
 
 
