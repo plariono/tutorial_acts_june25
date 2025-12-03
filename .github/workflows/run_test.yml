@@ -29,18 +29,25 @@ jobs:
         run: |
           echo "::group:: Checkout ACTS"
           git clone https://github.com/acts-project/acts.git
-          cd acts
-          mkdir -p build
-          cd build
+#          cd acts
+#          mkdir -p build
+#          cd build
           echo "::group:: ACTS Cmake"
-          cmake -DACTS_BUILD_PLUGIN_GEANT4=on \
-          -DACTS_BUILD_PLUGIN_TGEO=on \
+          cmake -S acts -B acts/build -DACTS_BUILD_PLUGIN_GEANT4=on \
+          -DACTS_BUILD_PLUGIN_ROOT=on \
           -DACTS_BUILD_FATRAS=on \
           -DACTS_BUILD_FATRAS_GEANT4=on \
           -DACTS_BUILD_EXAMPLES_GEANT4=on \
           -DACTS_BUILD_EXAMPLES_PYTHON_BINDINGS=on \
           -DACTS_BUILD_ANALYSIS_APPS=on \
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
           -DACTS_BUILD_EXAMPLES_PYTHIA8=on ..
-          echo "::grou:: BUILD ACTS"
+          echo "::group:: BUILD ACTS"
           make
-
+          echo "::group:: Setup ACTS"
+          source acts/build/this_acts.sh
+          source acts/build/python/setup.sh
+#          cd ..
+          export ACTS_SEQUENCER_DISABLE_FPEMON=1
+          echo "::group:: Run Alice3 single particle test"
+          python full_chain_alice3_tutorial.py -n 100
