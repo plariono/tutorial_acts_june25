@@ -32,6 +32,7 @@ jobs:
           git clone https://github.com/acts-project/acts.git
           echo "::group:: ACTS Cmake"
           cmake -S acts -B acts/build -DACTS_BUILD_PLUGIN_GEANT4=on \
+          -DACTS_BUILD_PLUGIN_JSON=on \
           -DACTS_BUILD_PLUGIN_ROOT=on \
           -DACTS_BUILD_FATRAS=on \
           -DACTS_BUILD_FATRAS_GEANT4=on \
