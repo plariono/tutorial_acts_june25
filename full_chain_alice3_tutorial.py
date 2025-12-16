@@ -132,8 +132,16 @@ if not args.usePythia:
         MomentumConfig(pTmin * u.MeV, pTmax * u.GeV, transverse=True),
         EtaConfig(etaMin, etaMax, uniform=True),
         ParticleConfig(npart, particle,
-                       randomizeCharge=True),
-        rnd=rnd,
+                       randomizeCharge=True,
+                       ),
+        vtxGen=acts.examples.GaussianVertexGenerator(
+            mean=acts.Vector4(0, 0, 0, 0),
+            stddev=acts.Vector4(
+                0.0125 * u.mm, 0.0125 * u.mm, 55.5 * u.mm, 0.180 * u.ns
+            ),
+        ),
+        multiplicity=1,
+        rnd=rnd   
     )
 else:
     process_HI_central = ["SoftQCD:inelastic = on", "HeavyIon:bWidth=0.1", "HeavyIon:SigFitErr =  0.02,0.02,0.1,0.05,0.05,0.0,0.1,0.0",
