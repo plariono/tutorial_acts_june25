@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# Absolute path to this setup.sh
+export MAIN_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+
+# Add the directory to the python path
+export PYTHONPATH="${MAIN_DIR}:${PYTHONPATH}"

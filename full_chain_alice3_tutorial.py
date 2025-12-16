@@ -46,7 +46,8 @@ import acts.examples
 
 import array as arr
 
-import alice3_iris4_v40 as alice3_geometry
+#import alice3_iris4_v40 as alice3_geometry
+import alice3.alice3_detector_woTOF_Iris as alice3_geometry
 
 from acts import UnitConstants as u
 from acts.examples.root import RootParticleReader
@@ -110,10 +111,11 @@ maxImpact = arr.array("f", [3., 22.29])
 maxCotTheta = arr.array("f", [27.2899, 32.57108])
 
 acts_dir = pathlib.Path.cwd().parent
-tutorial_dir = pathlib.Path.cwd()
+#tutorial_dir = pathlib.Path.cwd()
+tutorial_dir  = pathlib.Path(os.environ["MAIN_DIR"])
 
 detector = alice3_geometry.buildALICE3Geometry(
-    acts_dir, enableMat, False)
+    tutorial_dir, enableMat, False)
 
 trackingGeometry = detector.trackingGeometry()
 decorators = detector.contextDecorators()
