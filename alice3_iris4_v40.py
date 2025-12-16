@@ -8,7 +8,6 @@ from acts.examples.tgeo import TGeoDetector, Interval
 from zipfile import ZipFile
 
 from acts.examples import (
-#    TGeoDetector,
     WhiteBoard,
     AlgorithmContext,
     ProcessCode,
