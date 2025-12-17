@@ -1,4 +1,4 @@
-name: run_test
+name: geometry_woTOF_test
 
 on:
   schedule:
@@ -55,12 +55,10 @@ jobs:
           python acts/Examples/Scripts/MaterialMapping/GeometryVisualisationAndMaterialHandling.py \
           --output_folder test_woTOF_iris \
           --geometry json/geometry-map.json
-
-    - name: Upload geometry artifacts
-      if: always()
-      uses: actions/upload-artifact@v4
+    
+    if: always()    
+    - uses: actions/upload-artifact@v4
       with:
         name: geometry-woTOF_iris-${{ matrix.LCG }}
-        path: |
-        alice3/json/
-        alice3/test_woTOF_iris/
+        path: alice3/test_woTOF_iris/
+
