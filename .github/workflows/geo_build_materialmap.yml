@@ -57,8 +57,8 @@ jobs:
           --geometry json/geometry-map.json
     
     #if: always()    
-    #- uses: actions/upload-artifact@v4
-    #  with:
-    #    name: geometry-woTOF_iris-${{ matrix.LCG }}
-    #    path: alice3/test_woTOF_iris/
+    - uses: actions/upload-artifact@v4
+      with:
+        name: geometry-woTOF_iris-${{ matrix.LCG }}
+        path: alice3/test_woTOF_iris/
 
