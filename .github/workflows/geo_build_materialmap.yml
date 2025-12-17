@@ -47,6 +47,20 @@ jobs:
           source acts/build/this_acts.sh
           source acts/build/python/setup.sh
           export ACTS_SEQUENCER_DISABLE_FPEMON=1
-          echo "::group:: Run Alice3 single particle test"
+          echo "::group:: Setup alice3 python package"
           source setup.sh
-          python full_chain_alice3_tutorial.py -n 100
+          echo "::group:: Run alice3 geaometry building"
+          cd alice3
+          python alice3_geometry.py $MAIN_DIR --output-json
+          python acts/Examples/Scripts/MaterialMapping/GeometryVisualisationAndMaterialHandling.py \
+          --output_folder test_woTOF_iris \
+          --geometry json/geometry-map.json
+
+    - name: Upload geometry artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: geometry-woTOF_iris-${{ matrix.LCG }}
+        path: |
+        alice3/json/
+        alice3/test_woTOF_iris/
