@@ -60,6 +60,7 @@ After that the file must be placed in ```actsdir/tutorial_acts_june25/geom/geom_
 
 ```
 cd tutorial_acts_june25
+source setup.sh
 source ../source/CI/setup_cvmfs_lcg.sh
 source ../acts/python/setup.sh
 python3 full_chain_alice3_tutorial.py --usePythia -n1000
