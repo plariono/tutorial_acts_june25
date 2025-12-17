@@ -52,7 +52,7 @@ jobs:
           echo "::group:: Run alice3 geaometry building"
           cd alice3
           python alice3_geometry.py $MAIN_DIR --output-json
-          python acts/Examples/Scripts/MaterialMapping/GeometryVisualisationAndMaterialHandling.py \
+          python ../acts/Examples/Scripts/MaterialMapping/GeometryVisualisationAndMaterialHandling.py \
           --output_folder test_woTOF_iris \
           --geometry json/geometry-map.json
     
