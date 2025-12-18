@@ -1,4 +1,5 @@
 [![run_test](https://github.com/plariono/tutorial_acts_june25/actions/workflows/run_test.yml/badge.svg)](https://github.com/plariono/tutorial_acts_june25/actions/workflows/run_test.yml)
+[![geometry_test](https://github.com/plariono/tutorial_acts_june25/actions/workflows/geo_build_materialmap.yml/badge.svg)](https://github.com/plariono/tutorial_acts_june25/actions/workflows/geo_build_materialmap.yml)
 
 
 
