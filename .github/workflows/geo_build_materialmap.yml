@@ -17,8 +17,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        LCG: ["LCG_108/x86_64-el9-gcc14-opt",  
-              "LCG_107/x86_64-el9-gcc13-opt"]  
+        include:
+          - LCG: "LCG_108/x86_64-el9-gcc14-opt"
+            LCG_NAME: "LCG_108-x86_64-el9-gcc14-opt"
+          - LCG: "LCG_107/x86_64-el9-gcc13-opt"
+            LCG_NAME: "LCG_107-x86_64-el9-gcc13-opt"
+        #LCG: ["LCG_108/x86_64-el9-gcc14-opt",  
+        #      "LCG_107/x86_64-el9-gcc13-opt"]  
     steps:
     
     - uses: actions/checkout@v4
@@ -60,6 +65,6 @@ jobs:
     - if: always()    
       uses: actions/upload-artifact@v4
       with:
-        name: geometry-woTOF_iris-${{ matrix.LCG }}
+        name: geometry-woTOF_iris-${{ matrix.LCG_NAME }}
         path: alice3/test_woTOF_iris/
 
