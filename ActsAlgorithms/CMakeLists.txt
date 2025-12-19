@@ -1,0 +1,2 @@
+add_subdirectory(ExampleAlgorithms)
+add_subdirectory(python)
