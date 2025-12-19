@@ -17,8 +17,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        LCG: ["LCG_108/x86_64-el9-gcc14-opt",  
-              "LCG_107/x86_64-el9-gcc13-opt"]  
+        include:
+          - LCG: "LCG_108/x86_64-el9-gcc14-opt"
+            LCG_NAME: "LCG_108-x86_64-el9-gcc14-opt"
+          - LCG: "LCG_107/x86_64-el9-gcc13-opt"
+            LCG_NAME: "LCG_107-x86_64-el9-gcc13-opt"
+        #LCG: ["LCG_108/x86_64-el9-gcc14-opt",  
+        #      "LCG_107/x86_64-el9-gcc13-opt"]  
     steps:
     
     - uses: actions/checkout@v4
@@ -29,7 +34,8 @@ jobs:
         ccache-key: ccache-el9-${{ matrix.LCG }}
         run: |
           echo "::group:: Checkout ACTS"
-          git clone https://github.com/acts-project/acts.git
+          #git clone https://github.com/acts-project/acts.git
+          git clone https://github.com/pbutti/acts.git -b fix-geometry-vis
           echo "::group:: ACTS Cmake"
           cmake -S acts -B acts/build -DACTS_BUILD_PLUGIN_GEANT4=on \
           -DACTS_BUILD_PLUGIN_JSON=on \
@@ -52,13 +58,13 @@ jobs:
           echo "::group:: Run alice3 geaometry building"
           cd alice3
           python alice3_geometry.py $MAIN_DIR --output-json
-          python acts/Examples/Scripts/MaterialMapping/GeometryVisualisationAndMaterialHandling.py \
+          python ../acts/Examples/Scripts/MaterialMapping/GeometryVisualisationAndMaterialHandling.py \
           --output_folder test_woTOF_iris \
           --geometry json/geometry-map.json
     
     - if: always()    
       uses: actions/upload-artifact@v4
       with:
-        name: geometry-woTOF_iris-${{ matrix.LCG }}
+        name: geometry-woTOF_iris-${{ matrix.LCG_NAME }}
         path: alice3/test_woTOF_iris/
 
