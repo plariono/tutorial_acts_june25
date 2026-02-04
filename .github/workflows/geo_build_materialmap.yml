@@ -34,8 +34,7 @@ jobs:
         ccache-key: ccache-el9-${{ matrix.LCG }}
         run: |
           echo "::group:: Checkout ACTS"
-          #git clone https://github.com/acts-project/acts.git
-          git clone https://github.com/pbutti/acts.git -b fix-geometry-vis
+          git clone https://github.com/acts-project/acts.git
           echo "::group:: ACTS Cmake"
           cmake -S acts -B acts/build -DACTS_BUILD_PLUGIN_GEANT4=on \
           -DACTS_BUILD_PLUGIN_JSON=on \
