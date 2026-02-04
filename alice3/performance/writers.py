@@ -7,6 +7,9 @@ import acts
 import acts.examples
 import acts.examples.reconstruction as acts_reco
 
+#Alice specific algorithms
+from AliceActsPythonBindings import TrackTruthMatcher
+
 
 def addCKFTracks(
     s: acts.examples.Sequencer,
@@ -135,15 +138,23 @@ def addCKFTracks(
     s.addAlgorithm(trackFinder)
     s.addWhiteboardAlias("tracks", trackFinder.config.outputTracks)
 
-    matchAlg = acts.examples.TrackTruthMatcher(
-        level=customLogLevel(),
-        inputTracks=trackFinder.config.outputTracks,
-        inputParticles="particles_selected",
-        inputMeasurementParticlesMap="measurement_particles_map",
-        outputTrackParticleMatching="ckf_track_particle_matching",
-        outputParticleTrackMatching="ckf_particle_track_matching",
-        doubleMatching=True,
-    )
+
+    truthMatchCfg = TrackTruthMatcher.Config()
+    truthMatchCfg.inputTracks=trackFinder.config.outputTracks
+    truthMatchCfg.inputParticles="particles_selected"
+    truthMatchCfg.inputMeasurementParticlesMap="measurement_particles_map"
+    truthMatchCfg.outputTrackParticleMatching="ckf_track_particle_matching"
+    truthMatchCfg.outputParticleTrackMatching="ckf_particle_track_matching"
+    truthMatchCfg.looperProtection=True
+    truthMatchCfg.loop_absEta = 1.5
+    truthMatchCfg.loop_maxPt  = 0.2
+    truthMatchCfg.loop_maxParticleHits = 11
+    
+    
+    matchAlg = TrackTruthMatcher(
+        config = truthMatchCfg,
+        level=customLogLevel())
+    
     s.addAlgorithm(matchAlg)
     s.addWhiteboardAlias(
         "track_particle_matching", matchAlg.config.outputTrackParticleMatching
@@ -215,14 +226,14 @@ def addTrackWriters(
 
         if writeFitterPerformance:
 
-            resPlotToolConfig = acts.examples.root.ResPlotToolConfig()
-            binning = resPlotToolConfig.varBinning
-            binning["Eta"] = acts.examples.root.AxisVariant.regular(80, -4,    4,     "#eta")
-            binning["Pt"] =  acts.examples.root.AxisVariant.regular(1000, -0,    50,     "pT [GeV/c]")
-            binning["Residual_phi"] =  acts.examples.root.AxisVariant.regular(200, -0.02,    0.02,     "r_{#phi} [rad]")
-            binning["Residual_theta"] =  acts.examples.root.AxisVariant.regular(200, -0.02,    0.02,     "r_{#theta} [rad]")
-            binning["Residual_qop"] =  acts.examples.root.AxisVariant.regular(200, -0.2,    0.2,     "r_{q/p} [c/GeV]")
-            resPlotToolConfig.varBinning = binning
+            #resPlotToolConfig = acts.examples.root.ResPlotToolConfig()
+            #binning = resPlotToolConfig.varBinning
+            #binning["Eta"] = acts.examples.root.AxisVariant.regular(80, -4,    4,     "#eta")
+            #binning["Pt"] =  acts.examples.root.AxisVariant.regular(1000, -0,    50,     "pT [GeV/c]")
+            #binning["Residual_phi"] =  acts.examples.root.AxisVariant.regular(200, -0.02,    0.02,     "r_{#phi} [rad]")
+            #binning["Residual_theta"] =  acts.examples.root.AxisVariant.regular(200, -0.02,    0.02,     "r_{#theta} [rad]")
+            #binning["Residual_qop"] =  acts.examples.root.AxisVariant.regular(200, -0.2,    0.2,     "r_{q/p} [c/GeV]")
+            #resPlotToolConfig.varBinning = binning
             
             trackFitterPerformanceWriter = (
                 acts.examples.root.RootTrackFitterPerformanceWriter(
@@ -230,7 +241,7 @@ def addTrackWriters(
                     inputTracks=tracks,
                     inputParticles="particles_selected",
                     inputTrackParticleMatching="track_particle_matching",
-                    resPlotToolConfig = resPlotToolConfig,
+                    #resPlotToolConfig = resPlotToolConfig,
                     filePath=str(outputDirRoot / f"performance_fitting_{name}.root"),
                 )
             )
@@ -259,17 +270,17 @@ def addTrackWriters(
             binning["Pt"] = acts.examples.root.AxisVariant.regular(1000,  0,    50,   "pT [GeV/c]")
             fakePlotToolConfig.varBinning = binning
 
-            trackQualityPlotToolConfig = acts.examples.root.TrackQualityPlotToolConfig()
-            binning = trackQualityPlotToolConfig.varBinning
-            binning["Eta"] = acts.examples.root.AxisVariant.regular(80, -4,    4,     "#eta")
-            binning["Pt"] = acts.examples.root.AxisVariant.regular(1000,  0,    50,   "pT [GeV/c]")
-            trackQualityPlotToolConfig.varBinning = binning
+            #trackQualityPlotToolConfig = acts.examples.root.TrackQualityPlotToolConfig()
+            #binning = trackQualityPlotToolConfig.varBinning
+            #binning["Eta"] = acts.examples.root.AxisVariant.regular(80, -4,    4,     "#eta")
+            #binning["Pt"] = acts.examples.root.AxisVariant.regular(1000,  0,    50,   "pT [GeV/c]")
+            #trackQualityPlotToolConfig.varBinning = binning
 
-            trackSummaryPlotToolConfig = acts.examples.root.TrackSummaryPlotToolConfig()
-            binning = trackSummaryPlotToolConfig.varBinning
-            binning["Eta"] = acts.examples.root.AxisVariant.regular(80, -4,    4,     "#eta")
-            binning["Pt"] = acts.examples.root.AxisVariant.regular(1000,  0,    50,   "pT [GeV/c]")
-            trackSummaryPlotToolConfig.varBinning = binning
+            #trackSummaryPlotToolConfig = acts.examples.root.TrackSummaryPlotToolConfig()
+            #binning = trackSummaryPlotToolConfig.varBinning
+            #binning["Eta"] = acts.examples.root.AxisVariant.regular(80, -4,    4,     "#eta")
+            #binning["Pt"] = acts.examples.root.AxisVariant.regular(1000,  0,    50,   "pT [GeV/c]")
+            #trackSummaryPlotToolConfig.varBinning = binning
             
             
             trackFinderPerfWriter = acts.examples.root.RootTrackFinderPerformanceWriter(
@@ -282,8 +293,8 @@ def addTrackWriters(
                 effPlotToolConfig = effPlotToolConfig,
                 fakePlotToolConfig = fakePlotToolConfig,
                 duplicationPlotToolConfig = duplicationPlotToolConfig,
-                trackQualityPlotToolConfig = trackQualityPlotToolConfig,
-                trackSummaryPlotToolConfig = trackSummaryPlotToolConfig,
+                #trackQualityPlotToolConfig = trackQualityPlotToolConfig,
+                #trackSummaryPlotToolConfig = trackSummaryPlotToolConfig,
                 filePath=str(outputDirRoot / f"performance_finding_{name}.root"),
             )
             s.addWriter(trackFinderPerfWriter)
