@@ -20,11 +20,12 @@ from acts.examples.json import (
 )
 
 import acts
+import acts.examples
 
-from acts import MaterialMapJsonConverter
+from acts.json import MaterialMapJsonConverter
 from acts import UnitConstants as u
 
-def buildALICE3Geometry_withTOF(
+def buildALICE3Geometry(
     geo_dir: Path,
     material: bool = False,
     jsonconfig: bool = False,
@@ -38,15 +39,16 @@ def buildALICE3Geometry_withTOF(
 #    matDeco = acts.IMaterialDecorator.fromFile("geometry-map.json")
     if material:
 #        file = geo_dir / "material-maps.root"
-        file = geo_dir / "material-map.json"
+        file = geo_dir / "geom/geom_dec25/material-map.json"
         logger.info("Adding material from %s", file.absolute())
         matDeco = acts.IMaterialDecorator.fromFile(
             file,
             level=acts.logging.Level(
                 min(acts.logging.INFO.value, logLevel.value)),
         )
-
-    tgeo_fileName = geo_dir / "geom/o2sim_geometry.root"
+        
+    tgeo_fileName = geo_dir / "geom/geom_dec25/o2sim_geometry.root"
+    logger.info("tgeo_filename from %s",tgeo_fileName.absolute())
 
     if jsonconfig:
         jsonFile = geo_dir / "tgeo-config.json"

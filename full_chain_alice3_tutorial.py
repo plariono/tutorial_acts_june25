@@ -46,6 +46,8 @@ import acts.examples
 
 import array as arr
 
+import alice3.performance.writers as alice3_writers
+
 #import alice3_iris4_v40 as alice3_geometry
 import alice3.alice3_detector_woTOF_Iris as alice3_geometry
 
@@ -332,7 +334,7 @@ addSeeding(
     particleHypothesis=acts.ParticleHypothesis.pion,
 )
 
-addCKFTracks(
+alice3_writers.addCKFTracks(
     s,
     trackingGeometry,
     field,

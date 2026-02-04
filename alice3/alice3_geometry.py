@@ -17,7 +17,7 @@ from acts.examples.json import (
 )
 
 # The detector currently used by Igor, with TOF and different geometry
-#import alice3_detector_withTOF
+import alice3_detector_withTOF
 
 # The detector used by Pavel, without TOF and Iris (?)
 import alice3_detector_woTOF_Iris
@@ -142,7 +142,7 @@ if "__main__" == __name__:
     
     if args.geo_version == "withTOF":
     
-        detector = alice3_detector_withTOF.buildALICE3Geometry_withTOF(
+        detector = alice3_detector_withTOF.buildALICE3Geometry(
             geo_example_dir,
             material=not args.no_material,
         )
