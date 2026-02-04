@@ -2,8 +2,10 @@
 
 
 #include "ExampleAlgorithm.hpp"
-#include <algorithm>
+#include "TrackTruthMatcher.hpp"
 
+
+#include <algorithm>
 #include "ActsPython/Utilities/Macros.hpp"
 #include <pybind11/pybind11.h>
 
@@ -16,5 +18,14 @@ inline void addExampleAlgorithm(pybind11::module& mex) {
         AliceActsTrk::ExampleAlgorithm, mex, "ExampleAlgorithm", testString
     );
 }
+
+  inline void addTrackTruthMatcher(pybind11::module& mex) {
+    ACTS_PYTHON_DECLARE_ALGORITHM(
+                                  AliceActsTrk::TrackTruthMatcher, mex, "TrackTruthMatcher",
+                                  inputTracks, inputParticles,
+                                  inputMeasurementParticlesMap, outputTrackParticleMatching,
+                                  outputParticleTrackMatching, matchingRatio, doubleMatching,
+                                  looperProtection, loop_absEta, loop_maxPt, loop_maxParticleHits);
+  }
 
 }  // namespace AliceActsPython

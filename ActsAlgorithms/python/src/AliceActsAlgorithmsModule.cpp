@@ -13,4 +13,7 @@ PYBIND11_MODULE(AliceActsPythonBindings, mex) {
     
     // Call all algorithm binding functions here
     AliceActsPython::addExampleAlgorithm(mex);
+
+    
+    AliceActsPython::addTrackTruthMatcher(mex);
 }

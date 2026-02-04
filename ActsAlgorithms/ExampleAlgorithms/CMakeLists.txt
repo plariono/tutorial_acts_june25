@@ -5,7 +5,8 @@ add_library(ExampleAlgorithms SHARED)
 # ----------------------------------------
 target_sources(ExampleAlgorithms
     PRIVATE
-        src/ExampleAlgorithm.cpp
+    src/ExampleAlgorithm.cpp
+    src/TrackTruthMatcher.cpp
         # add more .cpp files here
 )
 
