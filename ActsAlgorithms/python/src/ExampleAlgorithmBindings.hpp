@@ -3,6 +3,7 @@
 
 #include "ExampleAlgorithm.hpp"
 #include "TrackTruthMatcher.hpp"
+#include "HitRemoverAlgorithm.hpp"
 
 
 #include <algorithm>
@@ -27,5 +28,12 @@ inline void addExampleAlgorithm(pybind11::module& mex) {
                                   outputParticleTrackMatching, matchingRatio, doubleMatching,
                                   looperProtection, loop_absEta, loop_maxPt, loop_maxParticleHits);
   }
+  
+  inline void addHitRemoverAlgorithm(pybind11::module& mex) {
+    ACTS_PYTHON_DECLARE_ALGORITHM(
+                                  AliceActsTrk::HitRemoverAlgorithm, mex, "HitRemoverAlgorithm",
+                                  inputMeasurements,inputTracks,outputMeasurements);
+  }
+  
 
 }  // namespace AliceActsPython

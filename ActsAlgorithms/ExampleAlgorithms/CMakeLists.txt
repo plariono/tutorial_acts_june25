@@ -7,6 +7,7 @@ target_sources(ExampleAlgorithms
     PRIVATE
     src/ExampleAlgorithm.cpp
     src/TrackTruthMatcher.cpp
+    src/HitRemoverAlgorithm.cpp
         # add more .cpp files here
 )
 

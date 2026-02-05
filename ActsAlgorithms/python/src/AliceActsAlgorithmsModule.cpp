@@ -16,4 +16,6 @@ PYBIND11_MODULE(AliceActsPythonBindings, mex) {
 
     
     AliceActsPython::addTrackTruthMatcher(mex);
+
+    AliceActsPython::addHitRemoverAlgorithm(mex);
 }

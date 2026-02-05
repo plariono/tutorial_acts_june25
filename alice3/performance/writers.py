@@ -300,6 +300,29 @@ def addTrackWriters(
             s.addWriter(trackFinderPerfWriter)
 
 
+
+def addHitRemoverAlgorithm(
+        s : acts.examples.Sequencer,
+        inputMeasurements : str,
+        inputTracks : str,
+        outputMeasurements : str,
+        logLevel : acts.logging.Level = None
+        ):
+
+    customLogLevel = acts.examples.defaultLogging(sequence, logLevel)
+
+
+    cfg = HitRemoverAlgorithm.Config()
+    cfg.inputMeasurements = "measurements"
+    cfg.inputTracks       = "ckf_tracks" # I think we should use the resolved ones?
+    cfg.outputTracks      = "filtered_measurements"
+    
+    HitRemoverAlg = HitRemoverAlgorithm(
+        config = cfg,
+        level=customLogLevel())
+    
+    s.addAlgorithm(matchAlg)
+
 def addTrackPerformanceWriters(
     sequence: acts.examples.Sequencer,
     outputDirRoot: Union[Path, str],
