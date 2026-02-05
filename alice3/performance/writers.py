@@ -316,6 +316,7 @@ def addHitRemoverAlgorithm(
     cfg = HitRemoverAlgorithm.Config()
     cfg.inputMeasurements = "measurements"
     cfg.inputTracks       = "ckf_tracks" # I think we should use the resolved ones?
+    cfg.usedIndices       = "used_meas_idxs"
     cfg.outputMeasurements= "filtered_measurements"
     
     HitRemoverAlg = HitRemoverAlgorithm(

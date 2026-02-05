@@ -1,5 +1,4 @@
 #include "HitRemoverAlgorithm.hpp"
-
 #include "Acts/Utilities/Logger.hpp"
 
 using namespace ActsExamples;
