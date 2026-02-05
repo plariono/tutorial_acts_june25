@@ -144,7 +144,7 @@ if not args.usePythia:
                 0.0125 * u.mm, 0.0125 * u.mm, 55.5 * u.mm, 0.180 * u.ns
             ),
         ),
-        multiplicity=1,
+        multiplicity=10,
         rnd=rnd   
     )
 else:

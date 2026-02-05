@@ -32,7 +32,7 @@ inline void addExampleAlgorithm(pybind11::module& mex) {
   inline void addHitRemoverAlgorithm(pybind11::module& mex) {
     ACTS_PYTHON_DECLARE_ALGORITHM(
                                   AliceActsTrk::HitRemoverAlgorithm, mex, "HitRemoverAlgorithm",
-                                  inputMeasurements,inputTracks,outputMeasurements);
+                                  inputMeasurements, inputTracks, usedIndices, outputMeasurements);
   }
   
 

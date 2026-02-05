@@ -12,6 +12,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <unordered_set>
 
 using namespace ActsExamples;
 
@@ -24,6 +25,7 @@ namespace AliceActsTrk {
     struct Config {
       std::string inputMeasurements = "";
       std::string inputTracks = "";
+      std::string usedIndices = "";
       std::string outputMeasurements = "";
       
     };
@@ -36,14 +38,17 @@ namespace AliceActsTrk {
   private:
     Config m_cfg;
 
-    void computeUsedHits(const TrackContainer& tracks,
-                         const MeasurementContainer& measurements) const;
+    void computeUsedHits(const ConstTrackContainer& tracks,
+                         const MeasurementContainer& measurements,
+                         std::unordered_set<size_t>& usedIndices,
+                         MeasurementContainer& filteredMeasurements) const;
 
 
-    ReadDataHandle<MeasurementContainer> m_inputMeasurements{this,
+    ReadDataHandle<MeasurementContainer>  m_inputMeasurements{this,
       "InputMeasurements"};
-    ReadDataHandle<ConstTrackContainer> m_inputTracks{this, "InputTracks"};
-        
+    ReadDataHandle<ConstTrackContainer>   m_inputTracks{this, "InputTracks"};
+
+    WriteDataHandle<std::unordered_set<size_t>>   m_usedIndices{this, "UsedIndices"};
     WriteDataHandle<MeasurementContainer> m_outputMeasurements{this, "OutputMeasurments"};
     
   }; //HitRemoverAlgorithm
