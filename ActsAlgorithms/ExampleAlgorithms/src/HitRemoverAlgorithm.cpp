@@ -37,7 +37,7 @@ namespace AliceActsTrk {
     
     
     ACTS_VERBOSE("Measurements size:: "<< measurements.size());
-    ACTS_VERBOSE("PF:: Tracks size:: "<< tracks.size());
+    ACTS_VERBOSE("Tracks size:: "<< tracks.size());
 
     // O(1) lookup and shared hits accounted for
     std::unordered_set<size_t> usedIndices;
@@ -49,7 +49,7 @@ namespace AliceActsTrk {
                     filteredMeasurements);
 
     ACTS_VERBOSE("Used Measurements size:: "<< usedIndices.size());
-    ACTS_VERBOSE("PF:: Filtered Measurements size:: "<< filteredMeasurements.size());
+    ACTS_VERBOSE("Filtered Measurements size:: "<< filteredMeasurements.size());
 
     m_usedIndices(ctx, std::move(usedIndices));
     m_outputMeasurements(ctx, std::move(filteredMeasurements));
