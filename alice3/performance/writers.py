@@ -9,6 +9,7 @@ import acts.examples.reconstruction as acts_reco
 
 #Alice specific algorithms
 from AliceActsPythonBindings import TrackTruthMatcher
+from AliceActsPythonBindings import HitRemoverAlgorithm
 
 
 def addCKFTracks(
@@ -309,19 +310,19 @@ def addHitRemoverAlgorithm(
         logLevel : acts.logging.Level = None
         ):
 
-    customLogLevel = acts.examples.defaultLogging(sequence, logLevel)
+    customLogLevel = acts.examples.defaultLogging(s, logLevel)
 
 
     cfg = HitRemoverAlgorithm.Config()
     cfg.inputMeasurements = "measurements"
     cfg.inputTracks       = "ckf_tracks" # I think we should use the resolved ones?
-    cfg.outputTracks      = "filtered_measurements"
+    cfg.outputMeasurements= "filtered_measurements"
     
     HitRemoverAlg = HitRemoverAlgorithm(
         config = cfg,
         level=customLogLevel())
     
-    s.addAlgorithm(matchAlg)
+    s.addAlgorithm(HitRemoverAlg)
 
 def addTrackPerformanceWriters(
     sequence: acts.examples.Sequencer,

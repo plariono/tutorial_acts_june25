@@ -353,6 +353,14 @@ alice3_writers.addCKFTracks(
     writeTrackStates=False,
 )
 
+
+alice3_writers.addHitRemoverAlgorithm(
+    s,
+    "measurements",
+    "ckf_tracks",
+    "filter_measurements")
+
+
 addAmbiguityResolution(
     s,
     AmbiguityResolutionConfig(maximumSharedHits=3, nMeasurementsMin=nMeasMin),
