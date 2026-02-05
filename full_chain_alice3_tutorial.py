@@ -47,6 +47,7 @@ import acts.examples
 import array as arr
 
 import alice3.performance.writers as alice3_writers
+import alice3.performance.seeding as alice3_seeding
 
 #import alice3_iris4_v40 as alice3_geometry
 import alice3.alice3_detector_woTOF_Iris as alice3_geometry
@@ -192,7 +193,7 @@ addDigitization(
     s,
     trackingGeometry,
     field,
-    digiConfigFile=tutorial_dir / "alice3-smearing-config.json",
+    digiConfigFile = tutorial_dir / "alice3-smearing-config.json",
     outputDirRoot=outputDir,
     rnd=rnd,
 )
@@ -207,119 +208,16 @@ addDigiParticleSelection(
     ),
 )
 
-addSeeding(
+alice3_seeding.addSeeding(
     s,
     trackingGeometry,
     field,
-    SeedFinderConfigArg(
-        r=(None, 200 * u.mm),
-        deltaR=(deltaRmin[seedParamOption] * u.mm,
-                deltaRmax[seedParamOption] * u.mm),
-        collisionRegion=(-250 * u.mm, 250 * u.mm),
-        z=(-1300 * u.mm, 1300 * u.mm),
-        maxSeedsPerSpM=maxSeedsPerMiddleSp[seedParamOption],
-        sigmaScattering=maxSigmaScattering[seedParamOption],
-        radLengthPerSeed=radiationLengthPerSeed[seedParamOption],
-        minPt=pTmin * 0.85 * u.MeV,
-        impactMax=maxImpact[seedParamOption] * u.mm,
-        cotThetaMax=maxCotTheta[seedParamOption],
-        rRangeMiddleSP=[
-            [5, 60],
-            [5, 100],
-            [5, 100],
-            [10, 130],
-            [10, 130],
-            [10, 130],
-            [10, 130],
-            [10, 130],
-            [10, 130],
-            [10, 130],
-            [5, 100],
-            [5, 100],
-            [5, 60],
-        ],
-        seedConfirmation=enableSeedconfirmation,
-        centralSeedConfirmationRange=acts.SeedConfirmationRangeConfig(
-            zMinSeedConf=-620 * u.mm,
-            zMaxSeedConf=620 * u.mm,
-            rMaxSeedConf=36 * u.mm,
-            nTopForLargeR=1,
-            nTopForSmallR=2,
-        ),
-        forwardSeedConfirmationRange=acts.SeedConfirmationRangeConfig(
-            zMinSeedConf=-1220 * u.mm,
-            zMaxSeedConf=1220 * u.mm,
-            rMaxSeedConf=36 * u.mm,
-            nTopForLargeR=1,
-            nTopForSmallR=2,
-        ),
-        useVariableMiddleSPRange=False,
-        # deltaRMiddleMinSPRange=10 * u.mm,
-        # deltaRMiddleMaxSPRange=10 * u.mm,
-        # deltaRMiddleSPRange=(1 * u.mm, 10 * u.mm),
-    ),
-    SeedFinderOptionsArg(bFieldInZ=bFieldZ * u.T,
-                         beamPos=(0 * u.mm, 0 * u.mm)),
-    SeedFilterConfigArg(
-        seedConfirmation=enableSeedconfirmation,
-        maxSeedsPerSpMConf=5,
-        maxQualitySeedsPerSpMConf=5,
-    ),
-    SpacePointGridConfigArg(
-        zBinEdges=[
-            -1300.0,
-            -1100.0,
-            -900.0,
-            -700.0,
-            -400.0,
-            -250.0,
-            -50.0,
-            50.0,
-            250.0,
-            400.0,
-            700.0,
-            900.0,
-            1100.0,
-            1300.0,
-        ],
-        impactMax=3. * u.mm,
-        phiBinDeflectionCoverage=3,
-    ),
-    SeedingAlgorithmConfigArg(
-        # zBinNeighborsTop=[
-        # [0, 0],
-        # [-1, 0],
-        # [-1, 0],
-        # [-1, 0],
-        # [-1, 0],
-        # [-1, 0],
-        # [-1, 1],
-        # [0, 1],
-        # [0, 1],
-        # [0, 1],
-        # [0, 1],
-        # [0, 1],
-        # [0, 0],
-        # ],
-        # zBinNeighborsBottom=[
-        # [0, 1],
-        # [0, 1],
-        # [0, 1],
-        # [0, 1],
-        # [0, 1],
-        # [0, 1],
-        # [0, 0],
-        # [-1, 0],
-        # [-1, 0],
-        # [-1, 0],
-        # [-1, 0],
-        # [-1, 0],
-        # [-1, 0],
-        # ],
-        # numPhiNeighbors=1,
-    ),
-    geoSelectionConfigFile=tutorial_dir /
-    "geoSelection-alice3-cfg10.json",
+    geoSelectionConfigFile = tutorial_dir / "geoSelection-alice3-cfg10.json",
+    seedFinderConfigArg = alice3_seeding.PavelSeedFinderConfigArg,
+    seedFinderOptionsArg = alice3_seeding.DefaultSeedFinderOptionsArg,
+    seedFilterConfigArg = alice3_seeding.PavelSeedFilterConfigArg,
+    spacePointGridConfigArg = alice3_seeding.PavelSpacePointGridConfigArg,
+    seedingAlgorithmConfigArg = alice3_seeding.PavelSeedingAlgorithmConfigArg,
     outputDirRoot=outputDir,
     initialSigmas=[
         1 * u.mm,
@@ -330,9 +228,26 @@ addSeeding(
         1 * u.ns,
     ],
     initialSigmaPtRel=0.1,
-    initialVarInflation=[initVarInflFactor] * 6,
+    initialVarInflation=alice3_seeding.PavelInitialVarInflation,
     particleHypothesis=acts.ParticleHypothesis.pion,
 )
+
+
+#s = addSeeding(
+#    s,
+#    trackingGeometry,
+#    field,
+#    DefaultSeedFinderConfigArg,
+#    DefaultSeedFinderOptionsArg,
+#    DefaultSeedFilterConfigArg,
+#    DefaultSpacePointGridConfigArg,
+#    DefaultSeedingAlgorithmConfigArg,
+#    geoSelectionConfigFile=seedingGeoSelection_dir / SeedingLayers,
+#    seedingAlgorithm=seedingAlg,  
+#    outputDirRoot=outputDir,
+    #    initialVarInflation = (50,50,50,50,50,50)  # IA
+    #    initialVarInflation = (0.2,0.2,0.2,0.2,0.2,0.2)  #IA
+#)
 
 alice3_writers.addCKFTracks(
     s,
@@ -354,17 +269,41 @@ alice3_writers.addCKFTracks(
 )
 
 
+# Second iteration of tracking on left over hits.
+
 alice3_writers.addHitRemoverAlgorithm(
     s,
-    "measurements",
-    "ckf_tracks",
-    "filter_measurements")
+    inputMeasurements="measurements",
+    inputTracks="ckf_tracks",
+    outputMeasurements="measurements_iter_1",
+    logLevel=acts.logging.DEBUG)
 
-
-
-
-
-
+alice3_seeding.addSeeding(
+    s,
+    trackingGeometry,
+    field,
+    geoSelectionConfigFile = tutorial_dir / "geoSelection-alice3-cfg10.json",
+    seedFinderConfigArg = alice3_seeding.PavelSeedFinderConfigArg,
+    seedFinderOptionsArg = alice3_seeding.DefaultSeedFinderOptionsArg,
+    seedFilterConfigArg = alice3_seeding.PavelSeedFilterConfigArg,
+    spacePointGridConfigArg = alice3_seeding.PavelSpacePointGridConfigArg,
+    seedingAlgorithmConfigArg = alice3_seeding.PavelSeedingAlgorithmConfigArg,
+    outputDirRoot=outputDir,
+    initialSigmas=[
+        1 * u.mm,
+        1 * u.mm,
+        1 * u.degree,
+        1 * u.degree,
+        0.1 * u.e / u.GeV,
+        1 * u.ns,
+    ],
+    initialSigmaPtRel=0.1,
+    initialVarInflation=alice3_seeding.PavelInitialVarInflation,
+    particleHypothesis=acts.ParticleHypothesis.pion,
+    inputMeasurements = "measurements_iter_1",
+    outputSpacePoints = "spacepoints_iter_1",
+    iterationIndex = 1,
+)
 
 
 addAmbiguityResolution(

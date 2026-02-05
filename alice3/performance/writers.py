@@ -314,17 +314,18 @@ def addHitRemoverAlgorithm(
 
 
     cfg = HitRemoverAlgorithm.Config()
-    cfg.inputMeasurements = "measurements"
-    cfg.inputTracks       = "ckf_tracks" # I think we should use the resolved ones?
+    cfg.inputMeasurements = inputMeasurements
+    cfg.inputTracks       = inputTracks # I think we should use the resolved ones?
     cfg.usedIndices       = "used_meas_idxs"
-    cfg.outputMeasurements= "filtered_measurements"
+    cfg.outputMeasurements= outputMeasurements
     
     HitRemoverAlg = HitRemoverAlgorithm(
         config = cfg,
         level=customLogLevel())
     
     s.addAlgorithm(HitRemoverAlg)
-
+    
+    
 def addTrackPerformanceWriters(
     sequence: acts.examples.Sequencer,
     outputDirRoot: Union[Path, str],
