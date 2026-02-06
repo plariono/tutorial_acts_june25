@@ -23,6 +23,10 @@ from acts.examples.reconstruction import (
 )
 
 
+### Iterative tracking: seeding parameters ###
+minSeedPts = [0.4, 0.150, 0.07]
+
+
 #############################################
 #### IGOR's SEEDING: SOME OTHER PARAMS   ####
 #############################################
@@ -60,6 +64,7 @@ enableSeedconfirmation = False
 initVarInflFactor = 1.0
 PavelInitialVarInflation  = [initVarInflFactor] * 6
 enableMat = True
+
 
 
 PavelSeedFinderConfigArg = SeedFinderConfigArg(
@@ -109,6 +114,67 @@ PavelSeedFinderConfigArg = SeedFinderConfigArg(
         # deltaRMiddleMaxSPRange=10 * u.mm,
         # deltaRMiddleSPRange=(1 * u.mm, 10 * u.mm),
     )
+
+def get_seed_finder_config(iteration=0):
+    """
+    Get seeding configuration for a given iteration.
+    Args:
+    iteration: Iteration number (0,1,2)
+    """
+
+    iteration_params = {
+        0 : {
+            'minSeedPt' : 0.4
+        },
+        
+        1 : {
+            'minSeedPt' : 0.150
+        },
+
+        2 : {
+            'minSeedPt' : 0.07
+            }
+    }
+    
+    params = iteration_params[iteration]
+
+    return SeedFinderConfigArg(
+        r=(None, 210 * u.mm),  # iTOF is at 190 mm! if we want it for seeding
+        # r=(None, 150 * u.mm),
+        # r=(None, 30 * u.mm),
+        deltaR=(1 * u.mm, 200 * u.mm),  # deltaR=(1. * u.mm, 60 * u.mm),
+        collisionRegion=(
+            -collisionRegion_forSeeds * u.mm,
+            collisionRegion_forSeeds * u.mm,
+        ),
+        z=(-1000 * u.mm, 1000 * u.mm),
+        maxSeedsPerSpM=maxSeedsPerSpM,  # 2 is minimum, >2 is better for Pb-Pb
+        sigmaScattering=sigmaScattering,
+        radLengthPerSeed=radLengthPerSeed,  
+        minPt=params['minSeedPt'] * u.GeV,
+        impactMax=impParForSeeds * u.mm,  # important! IB vs ML seeds (e.g. 1 mm is ok for IB seeds, 5 mm - for ML seeds)
+        cotThetaMax=27.2899,
+        seedConfirmation=True,
+        centralSeedConfirmationRange=acts.SeedConfirmationRangeConfig(
+            zMinSeedConf=-620 * u.mm,
+            zMaxSeedConf=620 * u.mm,
+            rMaxSeedConf=4.9
+            * u.mm,  # 36 * u.mm,  # IA: dramatically affects acceptance at eta ~4. <5 * u.mm  gives best results
+            nTopForLargeR=1,  # number of top space points that confirm my seed at larger R, 1 - no confirmation
+            nTopForSmallR=2,
+        ),
+        forwardSeedConfirmationRange=acts.SeedConfirmationRangeConfig(
+            zMinSeedConf=-1220 * u.mm,
+            zMaxSeedConf=1220 * u.mm,
+            rMaxSeedConf=26 * u.mm,  # 15 * u.mm,  #36 * u.mm,
+            nTopForLargeR=1,
+            nTopForSmallR=2,
+        ),
+        # skipPreviousTopSP=True,
+        useVariableMiddleSPRange=True,
+        deltaRMiddleSPRange=(0.2 * u.mm, 1.0 * u.mm),
+    )
+
 
 PavelSeedFilterConfigArg = SeedFilterConfigArg(
         seedConfirmation=enableSeedconfirmation,
@@ -620,8 +686,11 @@ def addSeeding(
             )
         )
 
+        trackFinderWriterOutName = "performance_seeding"+collection_suffix+".root"
+        trackParamsWriterOutName = "estimatedparameterds"+collection_suffix+".root"
+        
         if outputDirRoot is not None:
-            acts.examples.reconstruction.addSeedPerformanceWriters(
+            addSeedPerformanceWriters(
                 s,
                 outputDirRoot,
                 tracks,
@@ -629,8 +698,61 @@ def addSeeding(
                 selectedParticles,
                 inputParticles,
                 parEstimateAlg.config.outputTrackParameters,
+                trackFinderWriterOutName,
+                trackParamsWriterOutName,
                 logLevel,
             )
 
-
     return s
+
+
+
+
+def addSeedPerformanceWriters(
+        sequence: acts.examples.Sequencer,
+        outputDirRoot: Union[Path, str],
+        tracks: str,
+        prototracks: str,
+        selectedParticles: str,
+        inputParticles: str,
+        outputTrackParameters: str,
+        trackFinderWriterOutName : str,
+        trackParamsWriterOutName : str,
+        logLevel: acts.logging.Level = None,
+):
+    """Writes seeding related performance output"""
+    customLogLevel = acts.examples.defaultLogging(sequence, logLevel)
+    outputDirRoot = Path(outputDirRoot)
+    if not outputDirRoot.exists():
+        outputDirRoot.mkdir()
+
+    sequence.addWriter(
+        acts.examples.root.RootTrackFinderPerformanceWriter(
+            level=customLogLevel(),
+            inputTracks=tracks,
+            inputParticles=selectedParticles,
+            inputTrackParticleMatching="seed_particle_matching",
+            inputParticleTrackMatching="particle_seed_matching",
+            inputParticleMeasurementsMap="particle_measurements_map",
+            filePath=str(outputDirRoot / trackFinderWriterOutName),
+        )
+    )
+
+    sequence.addWriter(
+        acts.examples.root.RootTrackParameterWriter(
+            level=customLogLevel(),
+            inputTrackParameters=outputTrackParameters,
+            inputProtoTracks=prototracks,
+            inputParticles=inputParticles,
+            inputSimHits="simhits",
+            inputMeasurementParticlesMap="measurement_particles_map",
+            inputMeasurementSimHitsMap="measurement_simhits_map",
+            filePath=str(outputDirRoot / trackParamsWriterOutName),
+            treeName="estimatedparams",
+        )
+    )
+
+
+#acts.examples.NamedTypeArgs(
+#    config=SeedFilterMLDBScanConfig,
+#)

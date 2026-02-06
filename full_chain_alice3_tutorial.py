@@ -5,7 +5,6 @@
 # Event:  ACTS Tutorial, June '25
 
 from acts.examples.reconstruction import (
-    addSeeding,
     CkfConfig,
     addCKFTracks,
     addAmbiguityResolution,
@@ -123,6 +122,7 @@ trackingGeometry = detector.trackingGeometry()
 decorators = detector.contextDecorators()
 
 doIterativeTracking=True
+debug=False
 
 field = acts.ConstantBField(acts.Vector3(0.0, 0.0, bFieldZ * u.T)) if not useFieldMap else acts.MagneticFieldMapRz(
     str(tutorial_dir / "fieldmaps" / fieldmapName))
@@ -274,8 +274,8 @@ alice3_writers.addCKFTracks(
 # Iterative tracking
 
 if (doIterativeTracking):
-    print("PF:: Setting up and running Iterative tracking")
-
+    if (debug):
+        print("Iterative Tracking::: Setting up....")
     # Set the naming convention for each iteration
     for iteration in range(1,3):
 
@@ -286,8 +286,14 @@ if (doIterativeTracking):
         used_meas_idxs    = "used_meas_idxs_iter_"+str(iteration)
         outputMeasurements= "measurements_iter_"+str(iteration)
         outputSpacePoints = "spacepoints_iter_"+str(iteration)
-    
 
+        if (debug):
+            print("Iteration::",iteration)
+            print(inputMeasurements)
+            print(used_meas_idxs)
+            print(outputMeasurements)
+            print(outputSpacePoints)
+        
         # Each iteration of tracking uses left over hits
 
         alice3_writers.addHitRemoverAlgorithm(
@@ -298,16 +304,22 @@ if (doIterativeTracking):
             outputMeasurements=outputMeasurements,
             logLevel=acts.logging.DEBUG)
 
+
+
+        if (debug):
+            print(alice3_seeding.get_seed_finder_config(iteration))
+        
+        
         alice3_seeding.addSeeding(
             s,
             trackingGeometry,
             field,
             geoSelectionConfigFile = tutorial_dir / "seedingGeoSelections/geoSelection-alice3-cfg10.json",
-            seedFinderConfigArg = alice3_seeding.PavelSeedFinderConfigArg,
-            seedFinderOptionsArg = alice3_seeding.DefaultSeedFinderOptionsArg,
-            seedFilterConfigArg = alice3_seeding.PavelSeedFilterConfigArg,
-            spacePointGridConfigArg = alice3_seeding.PavelSpacePointGridConfigArg,
-            seedingAlgorithmConfigArg = alice3_seeding.PavelSeedingAlgorithmConfigArg,
+            seedFinderConfigArg       = alice3_seeding.get_seed_finder_config(iteration),
+            seedFinderOptionsArg      = alice3_seeding.DefaultSeedFinderOptionsArg,
+            seedFilterConfigArg       = alice3_seeding.DefaultSeedFilterConfigArg,
+            spacePointGridConfigArg   = alice3_seeding.DefaultSpacePointGridConfigArg,
+            seedingAlgorithmConfigArg = alice3_seeding.DefaultSeedingAlgorithmConfigArg,
             outputDirRoot=outputDir,
             initialSigmas=[
                 1 * u.mm,
