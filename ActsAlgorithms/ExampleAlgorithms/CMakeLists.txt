@@ -20,12 +20,13 @@ target_include_directories(ExampleAlgorithms
 #        $<INSTALL_INTERFACE:include>
 )
 
+#link_directories(${CMAKE_PREFIX_PATH}/lib64)
+
 # ----------------------------------------
 # Link against Acts
 # ----------------------------------------
 target_link_libraries(ExampleAlgorithms
     PUBLIC
     Acts::Core
-    /home/pibutti/sw/acts/install/lib64/libActsExamplesFramework.so
+    ${CMAKE_PREFIX_PATH}/lib64/libActsExamplesFramework.so
   )
-

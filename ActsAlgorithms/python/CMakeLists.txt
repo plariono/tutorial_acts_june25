@@ -11,9 +11,12 @@ target_include_directories(AliceActsPythonBindings
     ${CMAKE_CURRENT_SOURCE_DIR}/../ExampleAlgorithms/include
     )
 
+#link_directories(${CMAKE_PREFIX_PATH}/lib64)
+#message(STATUS "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
+    
 target_link_libraries(AliceActsPythonBindings
   PUBLIC
   ExampleAlgorithms
-  /home/pibutti/sw/acts/install/lib64/libActsExamplesFramework.so
+  ${CMAKE_PREFIX_PATH}/lib64/libActsExamplesFramework.so
   Acts::Core
 )
