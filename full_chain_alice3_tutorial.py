@@ -114,7 +114,6 @@ maxImpact = arr.array("f", [3., 22.29])
 maxCotTheta = arr.array("f", [27.2899, 32.57108])
 
 acts_dir = pathlib.Path.cwd().parent
-#tutorial_dir = pathlib.Path.cwd()
 tutorial_dir  = pathlib.Path(os.environ["MAIN_DIR"])
 
 detector = alice3_geometry.buildALICE3Geometry(
@@ -123,7 +122,8 @@ detector = alice3_geometry.buildALICE3Geometry(
 trackingGeometry = detector.trackingGeometry()
 decorators = detector.contextDecorators()
 
-#print ("PF:: Magnetic field map", tutorial_dir._str +"/"+"fieldmaps"+"/"+ fieldmapName)
+doIterativeTracking=True
+
 field = acts.ConstantBField(acts.Vector3(0.0, 0.0, bFieldZ * u.T)) if not useFieldMap else acts.MagneticFieldMapRz(
     str(tutorial_dir / "fieldmaps" / fieldmapName))
 rnd = acts.examples.RandomNumbers(seed=42)
@@ -212,7 +212,7 @@ alice3_seeding.addSeeding(
     s,
     trackingGeometry,
     field,
-    geoSelectionConfigFile = tutorial_dir / "geoSelection-alice3-cfg10.json",
+    geoSelectionConfigFile = tutorial_dir / "seedingGeoSelections/geoSelection-alice3-cfg10.json",
     seedFinderConfigArg = alice3_seeding.PavelSeedFinderConfigArg,
     seedFinderOptionsArg = alice3_seeding.DefaultSeedFinderOptionsArg,
     seedFilterConfigArg = alice3_seeding.PavelSeedFilterConfigArg,
@@ -269,42 +269,61 @@ alice3_writers.addCKFTracks(
 )
 
 
-# Second iteration of tracking on left over hits.
 
-alice3_writers.addHitRemoverAlgorithm(
-    s,
-    inputMeasurements="measurements",
-    inputTracks="ckf_tracks",
-    outputMeasurements="measurements_iter_1",
-    logLevel=acts.logging.DEBUG)
 
-alice3_seeding.addSeeding(
-    s,
-    trackingGeometry,
-    field,
-    geoSelectionConfigFile = tutorial_dir / "geoSelection-alice3-cfg10.json",
-    seedFinderConfigArg = alice3_seeding.PavelSeedFinderConfigArg,
-    seedFinderOptionsArg = alice3_seeding.DefaultSeedFinderOptionsArg,
-    seedFilterConfigArg = alice3_seeding.PavelSeedFilterConfigArg,
-    spacePointGridConfigArg = alice3_seeding.PavelSpacePointGridConfigArg,
-    seedingAlgorithmConfigArg = alice3_seeding.PavelSeedingAlgorithmConfigArg,
-    outputDirRoot=outputDir,
-    initialSigmas=[
-        1 * u.mm,
-        1 * u.mm,
-        1 * u.degree,
-        1 * u.degree,
-        0.1 * u.e / u.GeV,
-        1 * u.ns,
-    ],
-    initialSigmaPtRel=0.1,
-    initialVarInflation=alice3_seeding.PavelInitialVarInflation,
-    particleHypothesis=acts.ParticleHypothesis.pion,
-    inputMeasurements = "measurements_iter_1",
-    outputSpacePoints = "spacepoints_iter_1",
-    iterationIndex = 1,
-)
+# Iterative tracking
 
+if (doIterativeTracking):
+    print("PF:: Setting up and running Iterative tracking")
+
+    # Set the naming convention for each iteration
+    for iteration in range(1,3):
+
+        inputMeasurements = "measurements"
+        if iteration > 1:
+            inputMeasurements = "measurements_iter_"+str(iteration-1)
+
+        used_meas_idxs    = "used_meas_idxs_iter_"+str(iteration)
+        outputMeasurements= "measurements_iter_"+str(iteration)
+        outputSpacePoints = "spacepoints_iter_"+str(iteration)
+    
+
+        # Each iteration of tracking uses left over hits
+
+        alice3_writers.addHitRemoverAlgorithm(
+            s,
+            inputMeasurements=inputMeasurements,
+            inputTracks="ckf_tracks",
+            used_meas_idxs=used_meas_idxs,
+            outputMeasurements=outputMeasurements,
+            logLevel=acts.logging.DEBUG)
+
+        alice3_seeding.addSeeding(
+            s,
+            trackingGeometry,
+            field,
+            geoSelectionConfigFile = tutorial_dir / "seedingGeoSelections/geoSelection-alice3-cfg10.json",
+            seedFinderConfigArg = alice3_seeding.PavelSeedFinderConfigArg,
+            seedFinderOptionsArg = alice3_seeding.DefaultSeedFinderOptionsArg,
+            seedFilterConfigArg = alice3_seeding.PavelSeedFilterConfigArg,
+            spacePointGridConfigArg = alice3_seeding.PavelSpacePointGridConfigArg,
+            seedingAlgorithmConfigArg = alice3_seeding.PavelSeedingAlgorithmConfigArg,
+            outputDirRoot=outputDir,
+            initialSigmas=[
+                1 * u.mm,
+                1 * u.mm,
+                1 * u.degree,
+                1 * u.degree,
+                0.1 * u.e / u.GeV,
+                1 * u.ns,
+            ],
+            initialSigmaPtRel=0.1,
+            initialVarInflation=alice3_seeding.PavelInitialVarInflation,
+            particleHypothesis=acts.ParticleHypothesis.pion,
+            inputMeasurements = outputMeasurements,
+            outputSpacePoints = outputSpacePoints,
+            iterationIndex = iteration,
+        )
 
 addAmbiguityResolution(
     s,

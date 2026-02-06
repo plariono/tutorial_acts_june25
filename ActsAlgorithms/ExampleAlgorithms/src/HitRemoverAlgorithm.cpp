@@ -83,7 +83,9 @@ namespace AliceActsTrk {
       }
     } // loop on tracks
 
-    filteredMeasurements.reserve(measurements.size() - usedIndices.size());
+    if (measurements.size() > usedIndices.size())
+      filteredMeasurements.reserve(measurements.size() - usedIndices.size());
+    
     for (size_t i = 0; i <  measurements.size(); ++i) {
 
       if (usedIndices.find(i) == usedIndices.end()) {

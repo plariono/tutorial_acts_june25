@@ -306,6 +306,7 @@ def addHitRemoverAlgorithm(
         s : acts.examples.Sequencer,
         inputMeasurements : str,
         inputTracks : str,
+        used_meas_idxs : str,
         outputMeasurements : str,
         logLevel : acts.logging.Level = None
         ):
@@ -316,7 +317,7 @@ def addHitRemoverAlgorithm(
     cfg = HitRemoverAlgorithm.Config()
     cfg.inputMeasurements = inputMeasurements
     cfg.inputTracks       = inputTracks # I think we should use the resolved ones?
-    cfg.usedIndices       = "used_meas_idxs"
+    cfg.usedIndices       = used_meas_idxs
     cfg.outputMeasurements= outputMeasurements
     
     HitRemoverAlg = HitRemoverAlgorithm(
