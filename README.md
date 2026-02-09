@@ -10,21 +10,45 @@
 Full ACTS documentation is located [here](https://acts.readthedocs.io/en/latest/).
 
 # ACTS lxplus installation: 
-```
-lrnvmbp14@macbookpro ~ % ssh [your username]@lxplus.cern.ch
-[plariono@lxplus986 plariono]$ cd /afs/cern.ch/work/[your username]
-[plariono@lxplus986 plariono]$ mkdir actsdir && cd actsdir
-[plariono@lxplus986 actsdir]$ git clone git@github.com:acts-project/acts.git source && cd source
-```
-Then the dependencies can be satisfied via an LCG release in the following way: 
-`source /cvmfs/sft.cern.ch/lcg/views/<lcg_release>/<lcg_platform>/setup.sh`
+
+ACTS installation has been tested with LCG version 108 and 107 (see CI) 
+
+## LCG Setup
+
 
 ```
-[plariono@lxplus986 actsdir]$ source /cvmfs/sft.cern.ch/lcg/views/LCG_107/x86_64-el9-gcc13-opt/setup.sh
-[plariono@lxplus986 actsdir]$ mkdir acts
-[plariono@lxplus986 actsdir]$ cmake -S source -B acts -DACTS_BUILD_PLUGIN_GEANT4=on -DACTS_BUILD_PLUGIN_ROOT=on -DACTS_BUILD_FATRAS=on -DACTS_BUILD_FATRAS_GEANT4=on -DACTS_BUILD_EXAMPLES_GEANT4=on -DACTS_BUILD_EXAMPLES_PYTHON_BINDINGS=on -DACTS_BUILD_ANALYSIS_APPS=on -DACTS_BUILD_EXAMPLES_PYTHIA8=on
-[plariono@lxplus986 actsdir]$ cmake -—build acts -j$nproc
+source /cvmfs/sft.cern.ch/lcg/views/LCG_108/x86_64-el9-gcc14-opt/setup.sh
 ```
+
+## Compile and install ACTS
+
+The following instructions provide the minimal installation of acts to run with Alice3 full reconstruction
+
+```
+git clone https://github.com/acts-project/acts.git
+cd acts
+mkdir build
+cmake -S acts -B acts/build -DACTS_BUILD_PLUGIN_GEANT4=on \
+-DACTS_BUILD_PLUGIN_JSON=on -DACTS_BUILD_PLUGIN_ROOT=on \
+-DACTS_BUILD_FATRAS=on -DACTS_BUILD_FATRAS_GEANT4=on \
+-DACTS_BUILD_EXAMPLES_GEANT4=on \
+-DACTS_BUILD_EXAMPLES=on \
+-DACTS_BUILD_PYTHON_BINDINGS=on \
+-DACTS_BUILD_ANALYSIS_APPS=on \
+-DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+-DACTS_BUILD_EXAMPLES_PYTHIA8=on \
+-DCMAKE_INSTALL_PREFIX=acts/install
+cd acts/build
+make -j$nproc install
+```
+
+## Setup ACTS 
+
+Setup acts to have it available for python bindings and compilation of this package.
+```
+source acts/install/bin/this_acts.sh
+```
+
 # ACTS aliBuild installation:
 ```
 aliBuild init
@@ -57,17 +81,24 @@ https://cernbox.cern.ch/s/PpjPUjx1F3HACFC
 
 After that the file must be placed in ```actsdir/tutorial_acts_june25/geom/geom_oct24```. 
 
+
+# Compilation of this package
+
+```
+source setup.sh
+mkdir build && cd build
+cmake -DCMAKE_PREFIX_PATH=<path/to/>acts/install ../
+```
+
 # Running the full chain simulation and reconstruction on lxplus
 
 ```
 cd tutorial_acts_june25
 source setup.sh
-source ../source/CI/setup_cvmfs_lcg.sh
-source ../acts/python/setup.sh
 python3 full_chain_alice3_tutorial.py --usePythia -n1000
 ```
 
-The output files will be located in ```actsdir/reco_output_pythia```.
+The output files will be located in the parent directory with name: ```reco_output_pythia```.
 
 # Get the $\it{p}_{\rm{T}}$ resolution plot
 
