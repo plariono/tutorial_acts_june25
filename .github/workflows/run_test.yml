@@ -49,4 +49,8 @@ jobs:
           export ACTS_SEQUENCER_DISABLE_FPEMON=1
           echo "::group:: Run Alice3 single particle test"
           source setup.sh
+          mkdir build && cd build
+          cmake -DCMAKE_PREFIX_PATH=${PWD}/../acts/install ..
+          make -j2
+          cd ..
           python full_chain_alice3_tutorial.py -n 100
