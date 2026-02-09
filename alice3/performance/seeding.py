@@ -26,7 +26,6 @@ from acts.examples.reconstruction import (
 ### Iterative tracking: seeding parameters ###
 minSeedPts = [0.4, 0.150, 0.07]
 
-
 #############################################
 #### IGOR's SEEDING: SOME OTHER PARAMS   ####
 #############################################
@@ -726,14 +725,32 @@ def addSeedPerformanceWriters(
     if not outputDirRoot.exists():
         outputDirRoot.mkdir()
 
+
+    print("PF:: Adding RootTrackFinderPerformanceWriter on tracks: ", tracks)
+
+    effPlotToolConfig = acts.examples.root.EffPlotToolConfig()
+    binning = effPlotToolConfig.varBinning
+    binning["Eta"] = acts.examples.root.AxisVariant.regular(80, -4,    4,     "#eta")
+    binning["Pt"]  = acts.examples.root.AxisVariant.regular(1000,  0,    50,   "pT [GeV/c]")
+    effPlotToolConfig.varBinning = binning
+    
+    fakePlotToolConfig = acts.examples.root.FakePlotToolConfig()
+    binning = fakePlotToolConfig.varBinning
+    binning["Eta"] = acts.examples.root.AxisVariant.regular(80, -4,    4,     "#eta")
+    binning["Pt"] = acts.examples.root.AxisVariant.regular(1000,  0,    50,   "pT [GeV/c]")
+    fakePlotToolConfig.varBinning = binning
+    
     sequence.addWriter(
         acts.examples.root.RootTrackFinderPerformanceWriter(
-            level=customLogLevel(),
+            #level=customLogLevel(),
+            level=acts.logging.DEBUG,
             inputTracks=tracks,
             inputParticles=selectedParticles,
             inputTrackParticleMatching="seed_particle_matching",
             inputParticleTrackMatching="particle_seed_matching",
             inputParticleMeasurementsMap="particle_measurements_map",
+            effPlotToolConfig = effPlotToolConfig,
+            fakePlotToolConfig = fakePlotToolConfig,
             filePath=str(outputDirRoot / trackFinderWriterOutName),
         )
     )
