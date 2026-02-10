@@ -92,9 +92,9 @@ fieldmapName = "1T_7.5m_solenoid_1m_free_bore.txt"
 #
 etaMin = -4
 etaMax = 4
-pTmin = 100  # in MeV/c
+pTmin = 50  # in MeV/c
 pTminCkf = 50  # in MeV/c
-pTmax = 10  # in GeV/c
+pTmax = 0.5  # in GeV/c
 nHitsMin = 7
 nMeasMin = 7
 nMeasCutOff = 1
@@ -145,7 +145,7 @@ if not args.usePythia:
                 0.0125 * u.mm, 0.0125 * u.mm, 55.5 * u.mm, 0.180 * u.ns
             ),
         ),
-        multiplicity=10,
+        multiplicity=20,
         rnd=rnd   
     )
 else:
@@ -277,15 +277,19 @@ if (doIterativeTracking):
     if (debug):
         print("Iterative Tracking::: Setting up....")
     # Set the naming convention for each iteration
-    for iteration in range(1,3):
+    for iteration in range(1,2):
 
         inputMeasurements = "measurements"
+        inputMeasurementParticlesMap="measurement_particles_map"
         if iteration > 1:
             inputMeasurements = "measurements_iter_"+str(iteration-1)
-
+            inputMeasurementParticlesMap = "measurement_particles_map_iter_"+str(iteration-1)
+            
         used_meas_idxs    = "used_meas_idxs_iter_"+str(iteration)
         outputMeasurements= "measurements_iter_"+str(iteration)
         outputSpacePoints = "spacepoints_iter_"+str(iteration)
+        outputMeasurementParticlesMap = "measurement_particles_map_iter_"+str(iteration)
+        outputParticleMeasurementsMap = "particle_measurements_map_iter_"+str(iteration)
 
         if (debug):
             print("Iteration::",iteration)
@@ -300,9 +304,13 @@ if (doIterativeTracking):
             s,
             inputMeasurements=inputMeasurements,
             inputTracks="ckf_tracks",
+            inputMeasurementParticlesMap=inputMeasurementParticlesMap,
+            sortByOldIndex=True,
             used_meas_idxs=used_meas_idxs,
             outputMeasurements=outputMeasurements,
-            logLevel=acts.logging.DEBUG)
+            outputMeasurementParticlesMap=outputMeasurementParticlesMap,
+            outputParticleMeasurementsMap=outputParticleMeasurementsMap,
+            logLevel=acts.logging.INFO)
 
 
 

@@ -10,6 +10,8 @@ from acts import UnitConstants as u
 import acts.examples
 import acts.examples.reconstruction as acts_reco
 
+import alice3.performance.plotting as alice3_plotting
+
 from acts.examples.reconstruction import (
     addSeeding,
     SeedFinderConfigArg,
@@ -358,6 +360,7 @@ def addSpacePointsMaking(
     For parameters description see addSeeding
     """
     logLevel = acts.examples.defaultLogging(sequence, logLevel)()
+    #logLevel=acts.logging.DEBUG
     spAlg = acts.examples.SpacePointMaker(
         level=logLevel,
         inputMeasurements=inputMeasurements,
@@ -483,7 +486,8 @@ def addSeeding(
         collection_suffix="_iter_"+str(iterationIndex)
     
     
-    logLevel = acts.examples.defaultLogging(s, logLevel)()
+    #logLevel = acts.examples.defaultLogging(s, logLevel)()
+    logLevel = acts.logging.DEBUG
     logger = acts.logging.getLogger("addSeeding")
     logger.setLevel(logLevel)
 
@@ -650,14 +654,23 @@ def addSeeding(
             )
         )
 
+        print ("PF::DEBUG", "measurement_particles_map"+collection_suffix)
+        print ("PF::DEBUG", "seed_particle_matching"+collection_suffix)
+        print ("PF::DEBUG", "particle_seed_matching"+collection_suffix)
+
+        inputMeasurementParticlesMap = "measurement_particles_map"+collection_suffix
+        inputParticleMeasurementMap  = "particle_measurements_map"+collection_suffix
+        outputTrackParticleMatching  = "seed_particle_matching"+collection_suffix
+        outputParticleTrackMatching  = "particle_seed_matching"+collection_suffix
+        
         s.addAlgorithm(
             acts.examples.TrackTruthMatcher(
                 level=logLevel,
                 inputTracks=tracks,
                 inputParticles=selectedParticles,
-                inputMeasurementParticlesMap="measurement_particles_map",
-                outputTrackParticleMatching="seed_particle_matching"+collection_suffix,
-                outputParticleTrackMatching="particle_seed_matching"+collection_suffix,
+                inputMeasurementParticlesMap=inputMeasurementParticlesMap,
+                outputTrackParticleMatching=outputTrackParticleMatching,
+                outputParticleTrackMatching=outputParticleTrackMatching,
                 matchingRatio=1.0,
                 doubleMatching=False,
             )
@@ -674,6 +687,9 @@ def addSeeding(
                 prototracks,
                 selectedParticles,
                 inputParticles,
+                inputParticleMeasurementMap,
+                outputTrackParticleMatching,
+                outputParticleTrackMatching,
                 parEstimateAlg.config.outputTrackParameters,
                 trackFinderWriterOutName,
                 trackParamsWriterOutName,
@@ -692,6 +708,9 @@ def addSeedPerformanceWriters(
         prototracks: str,
         selectedParticles: str,
         inputParticles: str,
+        inputParticleMeasurementsMap : str,
+        inputTrackParticleMatching : str,
+        inputParticleTrackMatching : str,
         outputTrackParameters: str,
         trackFinderWriterOutName : str,
         trackParamsWriterOutName : str,
@@ -706,17 +725,6 @@ def addSeedPerformanceWriters(
 
     print("PF:: Adding RootTrackFinderPerformanceWriter on tracks: ", tracks)
 
-    effPlotToolConfig = acts.examples.root.EffPlotToolConfig()
-    binning = effPlotToolConfig.varBinning
-    binning["Eta"] = acts.examples.root.AxisVariant.regular(80, -4,    4,     "#eta")
-    binning["Pt"]  = acts.examples.root.AxisVariant.regular(1000,  0,    50,   "pT [GeV/c]")
-    effPlotToolConfig.varBinning = binning
-    
-    fakePlotToolConfig = acts.examples.root.FakePlotToolConfig()
-    binning = fakePlotToolConfig.varBinning
-    binning["Eta"] = acts.examples.root.AxisVariant.regular(80, -4,    4,     "#eta")
-    binning["Pt"] = acts.examples.root.AxisVariant.regular(1000,  0,    50,   "pT [GeV/c]")
-    fakePlotToolConfig.varBinning = binning
     
     sequence.addWriter(
         acts.examples.root.RootTrackFinderPerformanceWriter(
@@ -724,11 +732,11 @@ def addSeedPerformanceWriters(
             level=acts.logging.DEBUG,
             inputTracks=tracks,
             inputParticles=selectedParticles,
-            inputTrackParticleMatching="seed_particle_matching",
-            inputParticleTrackMatching="particle_seed_matching",
-            inputParticleMeasurementsMap="particle_measurements_map",
-            effPlotToolConfig = effPlotToolConfig,
-            fakePlotToolConfig = fakePlotToolConfig,
+            inputTrackParticleMatching=inputTrackParticleMatching,
+            inputParticleTrackMatching=inputParticleTrackMatching,
+            inputParticleMeasurementsMap=inputParticleMeasurementsMap,
+            effPlotToolConfig = alice3_plotting.effPlotToolConfig,
+            fakePlotToolConfig = alice3_plotting.fakePlotToolConfig,
             filePath=str(outputDirRoot / trackFinderWriterOutName),
         )
     )

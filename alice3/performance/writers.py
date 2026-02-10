@@ -269,8 +269,12 @@ def addHitRemoverAlgorithm(
         s : acts.examples.Sequencer,
         inputMeasurements : str,
         inputTracks : str,
+        inputMeasurementParticlesMap : str,
+        sortByOldIndex : bool,
         used_meas_idxs : str,
         outputMeasurements : str,
+        outputMeasurementParticlesMap : str,
+        outputParticleMeasurementsMap : str,
         logLevel : acts.logging.Level = None
         ):
 
@@ -280,8 +284,12 @@ def addHitRemoverAlgorithm(
     cfg = HitRemoverAlgorithm.Config()
     cfg.inputMeasurements = inputMeasurements
     cfg.inputTracks       = inputTracks # I think we should use the resolved ones?
+    cfg.inputMeasurementParticlesMap = inputMeasurementParticlesMap
+    cfg.sortByOldIndex = sortByOldIndex
     cfg.usedIndices       = used_meas_idxs
     cfg.outputMeasurements= outputMeasurements
+    cfg.outputMeasurementParticlesMap = outputMeasurementParticlesMap
+    cfg.outputParticleMeasurementsMap = outputParticleMeasurementsMap
     
     HitRemoverAlg = HitRemoverAlgorithm(
         config = cfg,

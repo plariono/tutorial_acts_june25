@@ -9,6 +9,8 @@
 #include "ActsExamples/EventData/IndexSourceLink.hpp"
 #include "ActsExamples/Framework/DataHandle.hpp"
 
+#include "ActsExamples/EventData/SimParticle.hpp"
+
 #include <memory>
 #include <string>
 #include <vector>
@@ -25,8 +27,16 @@ namespace AliceActsTrk {
     struct Config {
       std::string inputMeasurements = "";
       std::string inputTracks = "";
+      std::string inputMeasurementParticlesMap = "";
+      bool sortByOldIndex = true;
+     
+
       std::string usedIndices = "";
       std::string outputMeasurements = "";
+      /// Output collection to map measured hits to contributing particles.
+      std::string outputMeasurementParticlesMap = "";
+      /// Output collection to map particles to measurements.
+      std::string outputParticleMeasurementsMap = "";
       
     };
 
@@ -40,16 +50,30 @@ namespace AliceActsTrk {
 
     void computeUsedHits(const ConstTrackContainer& tracks,
                          const MeasurementContainer& measurements,
+                         const IndexMultimap<SimBarcode>& inputMeasurementParticlesMap,
                          std::unordered_set<size_t>& usedIndices,
-                         MeasurementContainer& filteredMeasurements) const;
+                         MeasurementContainer& filteredMeasurements,
+                         IndexMultimap<SimBarcode>& measurementParticlesMap) const;
 
+    void createReindexedMultimap(const IndexMultimap<SimBarcode>& original,
+                                 const std::unordered_set<size_t>& usedIndices,
+                                 IndexMultimap<SimBarcode>& reindexed,
+                                 bool sortByOldIndex = true) const;
+    
 
     ReadDataHandle<MeasurementContainer>  m_inputMeasurements{this,
       "InputMeasurements"};
     ReadDataHandle<ConstTrackContainer>   m_inputTracks{this, "InputTracks"};
-
+    ReadDataHandle<IndexMultimap<SimBarcode>>   m_inputMeasurementParticlesMap{this, "measurements_particles_map"};
+        
     WriteDataHandle<std::unordered_set<size_t>>   m_usedIndices{this, "UsedIndices"};
     WriteDataHandle<MeasurementContainer> m_outputMeasurements{this, "OutputMeasurments"};
+
+    WriteDataHandle<IndexMultimap<SimBarcode>> m_outputMeasurementParticlesMap{
+      this, "OutputMeasurementParticlesMap"};
+
+    WriteDataHandle<InverseMultimap<SimBarcode>> m_outputParticleMeasurementsMap{
+      this, "OutputParticleMeasurementsMap"};
     
   }; //HitRemoverAlgorithm
     
