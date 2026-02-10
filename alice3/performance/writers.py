@@ -243,10 +243,6 @@ def addTrackWriters(
 
         if writeFinderPerformance:
 
-            
-            
-            
-            
             trackFinderPerfWriter = acts.examples.root.RootTrackFinderPerformanceWriter(
                 level=customLogLevel(),
                 inputTracks=tracks,

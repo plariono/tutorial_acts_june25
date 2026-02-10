@@ -37,11 +37,10 @@ namespace AliceActsTrk {
       std::string outputMeasurementParticlesMap = "";
       /// Output collection to map particles to measurements.
       std::string outputParticleMeasurementsMap = "";
-      
     };
 
     HitRemoverAlgorithm(Config cfg, Acts::Logging::Level lvl);
-    ActsExamples::ProcessCode execute(const AlgorithmContext& ctx) const final;
+    ProcessCode execute(const AlgorithmContext& ctx) const final;
 
     const Config& config() const { return m_cfg; }
 

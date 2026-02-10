@@ -27,6 +27,7 @@ binning = effPlotToolConfig.varBinning
 binning["Eta"] = acts.examples.root.AxisVariant.regular(80, -4,    4,     "#eta")
 binning["Pt"]  = acts.examples.root.AxisVariant.regular(1000,  0,    50,   "pT [GeV/c]")
 effPlotToolConfig.varBinning = binning
+effPlotToolConfig.minTruthPt = 0.15
 
 # Fake rate Plots
 fakePlotToolConfig = acts.examples.root.FakePlotToolConfig()

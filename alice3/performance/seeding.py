@@ -486,8 +486,8 @@ def addSeeding(
         collection_suffix="_iter_"+str(iterationIndex)
     
     
-    #logLevel = acts.examples.defaultLogging(s, logLevel)()
-    logLevel = acts.logging.DEBUG
+    logLevel = acts.examples.defaultLogging(s, logLevel)()
+    #logLevel = acts.logging.DEBUG
     logger = acts.logging.getLogger("addSeeding")
     logger.setLevel(logLevel)
 
@@ -678,7 +678,7 @@ def addSeeding(
 
         trackFinderWriterOutName = "performance_seeding"+collection_suffix+".root"
         trackParamsWriterOutName = "estimatedparameterds"+collection_suffix+".root"
-        
+
         if outputDirRoot is not None:
             addSeedPerformanceWriters(
                 s,
@@ -722,9 +722,8 @@ def addSeedPerformanceWriters(
     if not outputDirRoot.exists():
         outputDirRoot.mkdir()
 
-
+    
     print("PF:: Adding RootTrackFinderPerformanceWriter on tracks: ", tracks)
-
     
     sequence.addWriter(
         acts.examples.root.RootTrackFinderPerformanceWriter(
