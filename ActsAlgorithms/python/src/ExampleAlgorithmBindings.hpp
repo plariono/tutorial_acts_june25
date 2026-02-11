@@ -4,11 +4,13 @@
 #include "ExampleAlgorithm.hpp"
 #include "TrackTruthMatcher.hpp"
 #include "HitRemoverAlgorithm.hpp"
+#include "TrackMergerAlgorithm.hpp"
 
 
 #include <algorithm>
 #include "ActsPython/Utilities/Macros.hpp"
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 
 namespace AliceActsPython {
@@ -35,7 +37,15 @@ inline void addExampleAlgorithm(pybind11::module& mex) {
                                   inputMeasurements, inputTracks, inputMeasurementParticlesMap,
                                   sortByOldIndex,
                                   usedIndices, outputMeasurements,
-                                  outputMeasurementParticlesMap, outputParticleMeasurementsMap);
+                                  outputMeasurementParticlesMap, outputParticleMeasurementsMap,
+                                  outputIndexingMap);
+  }
+
+  inline void addTrackMergerAlgorithm(pybind11::module& mex) {
+    ACTS_PYTHON_DECLARE_ALGORITHM(
+                                  AliceActsTrk::TrackMergerAlgorithm, mex, "TrackMergerAlgorithm",
+                                  inputTrackCollections, inputIndexingMaps,
+                                  outputTrackCollection);
   }
   
 

@@ -30,13 +30,18 @@ namespace AliceActsTrk {
       std::string inputMeasurementParticlesMap = "";
       bool sortByOldIndex = true;
      
-
+      
       std::string usedIndices = "";
       std::string outputMeasurements = "";
       /// Output collection to map measured hits to contributing particles.
       std::string outputMeasurementParticlesMap = "";
       /// Output collection to map particles to measurements.
       std::string outputParticleMeasurementsMap = "";
+      /// Mapping between old and new measurements
+      /// It is a vector. The position is the new measurement, the value stored is the old index
+      /// Needed when merging tracks collections to restore proper indexing
+      std::string outputIndexingMap;
+      
     };
 
     HitRemoverAlgorithm(Config cfg, Acts::Logging::Level lvl);
@@ -52,7 +57,8 @@ namespace AliceActsTrk {
                          const IndexMultimap<SimBarcode>& inputMeasurementParticlesMap,
                          std::unordered_set<size_t>& usedIndices,
                          MeasurementContainer& filteredMeasurements,
-                         IndexMultimap<SimBarcode>& measurementParticlesMap) const;
+                         IndexMultimap<SimBarcode>& measurementParticlesMap,
+                         std::vector<size_t>& outputIndexingMap) const;
 
     void createReindexedMultimap(const IndexMultimap<SimBarcode>& original,
                                  const std::unordered_set<size_t>& usedIndices,
@@ -73,6 +79,10 @@ namespace AliceActsTrk {
 
     WriteDataHandle<InverseMultimap<SimBarcode>> m_outputParticleMeasurementsMap{
       this, "OutputParticleMeasurementsMap"};
+
+    WriteDataHandle<std::vector<size_t>> m_outputIndexingMap{
+      this, "OutputIndexingMap"};
+    
     
   }; //HitRemoverAlgorithm
     

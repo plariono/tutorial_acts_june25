@@ -36,7 +36,8 @@ namespace AliceActsTrk {
                                                m_cfg.outputMeasurementParticlesMap);
     m_outputParticleMeasurementsMap.initialize(
                                                m_cfg.outputParticleMeasurementsMap);
-    
+
+    m_outputIndexingMap.initialize(m_cfg.outputIndexingMap);
     
   }
   
@@ -59,13 +60,16 @@ namespace AliceActsTrk {
     // O(1) lookup and shared hits accounted for
     std::unordered_set<size_t> usedIndices;
     MeasurementContainer filteredMeasurements;
+    std::vector<size_t> outputIndexingMap;
+
     
     computeUsedHits(tracks,
                     measurements,
                     inputMeasurementParticlesMap,
                     usedIndices,
                     filteredMeasurements,
-                    measurementParticlesMap);
+                    measurementParticlesMap,
+                    outputIndexingMap);
 
     ACTS_DEBUG("Used Measurements size:: "<< usedIndices.size());
     ACTS_DEBUG("Filtered Measurements size:: "<< filteredMeasurements.size());
@@ -81,7 +85,7 @@ namespace AliceActsTrk {
     
     m_outputMeasurementParticlesMap(ctx, std::move(measurementParticlesMap));
 
-    
+    m_outputIndexingMap(ctx, std::move(outputIndexingMap));
     
     return ProcessCode::SUCCESS;
   }
@@ -93,9 +97,9 @@ namespace AliceActsTrk {
                                             const IndexMultimap<SimBarcode>& inputMeasurementParticlesMap,
                                             std::unordered_set<size_t>& usedIndices,
                                             MeasurementContainer& filteredMeasurements,
-                                            IndexMultimap<SimBarcode>& measurementParticlesMap) const {
+                                            IndexMultimap<SimBarcode>& measurementParticlesMap,
+                                            std::vector<size_t>& outputIndexingMap) const {
 
-    
     // Compute used hits from all the reconstruced tracks
     
     for (auto track : tracks) {
@@ -114,8 +118,10 @@ namespace AliceActsTrk {
     } // loop on tracks
 
     
-    if (measurements.size() > usedIndices.size())
+    if (measurements.size() > usedIndices.size()) {
       filteredMeasurements.reserve(measurements.size() - usedIndices.size());
+      outputIndexingMap.reserve(measurements.size() - usedIndices.size());
+    }
 
     for (size_t i = 0; i <  measurements.size(); ++i) {
       
@@ -123,9 +129,10 @@ namespace AliceActsTrk {
         
         auto meas = measurements.getMeasurement(i);
         filteredMeasurements.copyMeasurement(meas);
+        outputIndexingMap.push_back(i);
 
         ACTS_DEBUG("Found unused measurement with position "<< i << " and index" << meas.index());
-
+        
         /*
         // Now add the measurement to the multi map.
         auto range = inputMeasurementParticlesMap.equal_range(meas.index());

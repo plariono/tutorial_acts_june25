@@ -238,7 +238,7 @@ PavelSeedingAlgorithmConfigArg = SeedingAlgorithmConfigArg(
         # numPhiNeighbors=1,
     )
 
-DefaultSeedFinderConfig = SeedFinderConfigArg(
+DefaultSeedFinderConfigArg = SeedFinderConfigArg(
         r=(None, 210 * u.mm),  # iTOF is at 190 mm! if we want it for seeding
         # r=(None, 150 * u.mm),
         # r=(None, 30 * u.mm),
@@ -699,8 +699,37 @@ def addSeeding(
     return s
 
 
+# This adds only the performance algorithms to check the performance on a set of seed-tracks
+# - Schedule the TruthMatcher
+# - Schedule the TrackFinderPerformanceWriter for plots
 
+def addSeedPerformanceAlgorithms(
+        sequence : acts.examples.Sequencer,
+        outputDirRoot : Union[Path, str],
+        tracks: str,
+        inputParticles : str,
+        inputMeasurementParticlesMap : str,
+        outputTrackParticleMatching : str,
+        outputParticleTrackMatching : str,
+        logLevel: acts.logging.Level = None,
+        ) :
 
+    customLogLevel = acts.examples.defaultLogging(sequence, logLevel)
+    
+    sequence.addAlgorithm(
+        acts.examples.TrackTruthMatcher(
+            level=customLogLevel,
+            inputTracks=tracks,
+            inputParticles=selectedParticles,
+            inputMeasurementParticlesMap=inputMeasurementParticlesMap,
+            outputTrackParticleMatching=outputTrackParticleMatching,
+            outputParticleTrackMatching=outputParticleTrackMatching,
+            matchingRatio=1.0,
+            doubleMatching=False,
+        )
+    )
+    
+    
 def addSeedPerformanceWriters(
         sequence: acts.examples.Sequencer,
         outputDirRoot: Union[Path, str],

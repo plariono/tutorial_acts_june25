@@ -13,7 +13,6 @@
 
 using namespace ActsExamples;
 
-
 namespace AliceActsTrk {
 
   class TrackMergerAlgorithm final : public IAlgorithm {
@@ -22,6 +21,12 @@ namespace AliceActsTrk {
 
     struct Config {
       std::vector<std::string>  inputTrackCollections{};
+      
+      /// This will have size = inputTrackCollections.size()-1,
+      /// because we assume that the first track collection
+      /// used the original measurement vector
+      
+      std::vector<std::string>  inputIndexingMaps{};
       std::string outputTrackCollection = "";
     };
 
@@ -33,7 +38,8 @@ namespace AliceActsTrk {
   private:
     Config m_cfg;
     std::vector<ReadDataHandle<ConstTrackContainer>> m_inputTrackCollections;
-    WriteDataHandle<TrackContainer> m_outputTracks{this, "outputTracks"};
+    std::vector<ReadDataHandle<std::vector<size_t>>> m_inputIndexingMaps;
+    WriteDataHandle<ConstTrackContainer> m_outputTrackCollection{this, "outputTracks"};
     
   }; //TrackMergerAlgorithm
 }

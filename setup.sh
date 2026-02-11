@@ -8,3 +8,6 @@ export PYTHONPATH="${MAIN_DIR}:${PYTHONPATH}"
 
 # Add the local python bindings to the python path
 export PYTHONPATH="${MAIN_DIR}/build/ActsAlgorithms/python:${PYTHONPATH}"
+
+# Disable FPE errors
+export ACTS_SEQUENCER_DISABLE_FPEMON=1

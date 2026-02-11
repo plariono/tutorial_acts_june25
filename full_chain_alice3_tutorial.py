@@ -47,6 +47,7 @@ import array as arr
 
 import alice3.performance.writers as alice3_writers
 import alice3.performance.seeding as alice3_seeding
+import alice3.performance.plotting as alice3_plotting
 
 #import alice3_iris4_v40 as alice3_geometry
 import alice3.alice3_detector_woTOF_Iris as alice3_geometry
@@ -83,7 +84,7 @@ outputDir = args.output if not args.usePythia else pathlib.Path.cwd().parent / \
 
 # Partigle gun settings
 particle = acts.PdgParticle.ePionPlus
-npart = 1
+npart = 10
 
 # General settings
 bFieldZ = 1
@@ -145,7 +146,7 @@ if not args.usePythia:
                 0.0125 * u.mm, 0.0125 * u.mm, 55.5 * u.mm, 0.180 * u.ns
             ),
         ),
-        multiplicity=20,
+        multiplicity=50,
         rnd=rnd   
     )
 else:
@@ -212,12 +213,13 @@ alice3_seeding.addSeeding(
     s,
     trackingGeometry,
     field,
-    geoSelectionConfigFile = tutorial_dir / "seedingGeoSelections/geoSelection-alice3-cfg10.json",
-    seedFinderConfigArg = alice3_seeding.PavelSeedFinderConfigArg,
+    #geoSelectionConfigFile = tutorial_dir / "seedingGeoSelections/geoSelection-alice3-cfg10.json",
+    geoSelectionConfigFile = tutorial_dir / "seedingGeoSelections/geoSelectionForSeeding_VD.json",
+    seedFinderConfigArg = alice3_seeding.DefaultSeedFinderConfigArg,
     seedFinderOptionsArg = alice3_seeding.DefaultSeedFinderOptionsArg,
-    seedFilterConfigArg = alice3_seeding.PavelSeedFilterConfigArg,
-    spacePointGridConfigArg = alice3_seeding.PavelSpacePointGridConfigArg,
-    seedingAlgorithmConfigArg = alice3_seeding.PavelSeedingAlgorithmConfigArg,
+    seedFilterConfigArg = alice3_seeding.DefaultSeedFilterConfigArg,
+    spacePointGridConfigArg = alice3_seeding.DefaultSpacePointGridConfigArg,
+    seedingAlgorithmConfigArg = alice3_seeding.DefaultSeedingAlgorithmConfigArg,
     outputDirRoot=outputDir,
     initialSigmas=[
         1 * u.mm,
@@ -249,6 +251,7 @@ alice3_seeding.addSeeding(
     #    initialVarInflation = (0.2,0.2,0.2,0.2,0.2,0.2)  #IA
 #)
 
+
 alice3_writers.addCKFTracks(
     s,
     trackingGeometry,
@@ -277,6 +280,11 @@ if (doIterativeTracking):
     if (debug):
         print("Iterative Tracking::: Setting up....")
     # Set the naming convention for each iteration
+
+    trackCollectionForMerging = ["seed-tracks"]
+    mergedTrackCollection = "seed-tracks-merged"
+    outputIndexingMaps = []
+    
     for iteration in range(1,2):
 
         inputMeasurements = "measurements"
@@ -290,7 +298,9 @@ if (doIterativeTracking):
         outputSpacePoints = "spacepoints_iter_"+str(iteration)
         outputMeasurementParticlesMap = "measurement_particles_map_iter_"+str(iteration)
         outputParticleMeasurementsMap = "particle_measurements_map_iter_"+str(iteration)
-
+        outputIndexingMap = "measurement_indexingMap_iter_"+str(iteration)
+        
+        
         if (debug):
             print("Iteration::",iteration)
             print(inputMeasurements)
@@ -310,10 +320,10 @@ if (doIterativeTracking):
             outputMeasurements=outputMeasurements,
             outputMeasurementParticlesMap=outputMeasurementParticlesMap,
             outputParticleMeasurementsMap=outputParticleMeasurementsMap,
+            outputIndexingMap=outputIndexingMap,
             logLevel=acts.logging.INFO)
 
-
-
+        
         if (debug):
             print(alice3_seeding.get_seed_finder_config(iteration))
         
@@ -322,7 +332,8 @@ if (doIterativeTracking):
             s,
             trackingGeometry,
             field,
-            geoSelectionConfigFile = tutorial_dir / "seedingGeoSelections/geoSelection-alice3-cfg10.json",
+            #geoSelectionConfigFile = tutorial_dir / "seedingGeoSelections/geoSelection-alice3-cfg10.json",
+            geoSelectionConfigFile = tutorial_dir / "seedingGeoSelections/geoSelectionForSeeding_VD.json",
             seedFinderConfigArg       = alice3_seeding.get_seed_finder_config(iteration),
             seedFinderOptionsArg      = alice3_seeding.DefaultSeedFinderOptionsArg,
             seedFilterConfigArg       = alice3_seeding.DefaultSeedFilterConfigArg,
@@ -345,6 +356,45 @@ if (doIterativeTracking):
             iterationIndex = iteration,
         )
 
+        # Add the seed tracks for merging and the measurement mapping for this iteration
+        trackCollectionForMerging.append("seed-tracks_iter_"+str(iteration))
+        outputIndexingMaps.append(outputIndexingMap)
+    
+    alice3_writers.addTrackMerger(s,
+                                  trackCollectionForMerging,
+                                  outputIndexingMaps,
+                                  mergedTrackCollection,
+                                  acts.logging.INFO,
+                                  )
+
+
+    s.addAlgorithm(
+        acts.examples.TrackTruthMatcher(
+            level=acts.logging.INFO,
+            inputTracks=mergedTrackCollection,
+            inputParticles="particles_selected",
+            inputMeasurementParticlesMap="measurement_particles_map",
+            outputTrackParticleMatching="seed_merged_particle_matching",
+            outputParticleTrackMatching="particle_seed_merged_matching",
+            matchingRatio=1.0,
+            doubleMatching=False)
+        )
+    
+    
+    s.addWriter(
+        acts.examples.root.RootTrackFinderPerformanceWriter(
+            level=acts.logging.DEBUG,
+            inputTracks=mergedTrackCollection,
+            inputParticles="particles_selected",
+            inputTrackParticleMatching="seed_merged_particle_matching",
+            inputParticleTrackMatching="particle_seed_merged_matching",
+            inputParticleMeasurementsMap="particle_measurements_map",
+            effPlotToolConfig = alice3_plotting.effPlotToolConfig,
+            fakePlotToolConfig = alice3_plotting.fakePlotToolConfig,
+            filePath=str(outputDir / "performance_merged_seed.root"),
+        )
+    )
+    
 addAmbiguityResolution(
     s,
     AmbiguityResolutionConfig(maximumSharedHits=3, nMeasurementsMin=nMeasMin),
@@ -355,5 +405,6 @@ addAmbiguityResolution(
     writePerformance=True,
     writeCovMat=True,
 )
+
 
 s.run()

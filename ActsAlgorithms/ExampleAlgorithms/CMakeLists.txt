@@ -8,6 +8,7 @@ target_sources(ExampleAlgorithms
     src/ExampleAlgorithm.cpp
     src/TrackTruthMatcher.cpp
     src/HitRemoverAlgorithm.cpp
+    src/TrackMergerAlgorithm.cpp
         # add more .cpp files here
 )
 

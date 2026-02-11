@@ -10,6 +10,7 @@ import acts.examples.reconstruction as acts_reco
 #Alice3 specific algorithms
 from AliceActsPythonBindings import TrackTruthMatcher
 from AliceActsPythonBindings import HitRemoverAlgorithm
+from AliceActsPythonBindings import TrackMergerAlgorithm
 
 # Alice3 plotting
 import alice3.performance.plotting as alice3_plotting
@@ -271,6 +272,7 @@ def addHitRemoverAlgorithm(
         outputMeasurements : str,
         outputMeasurementParticlesMap : str,
         outputParticleMeasurementsMap : str,
+        outputIndexingMap : str,
         logLevel : acts.logging.Level = None
         ):
 
@@ -286,6 +288,7 @@ def addHitRemoverAlgorithm(
     cfg.outputMeasurements= outputMeasurements
     cfg.outputMeasurementParticlesMap = outputMeasurementParticlesMap
     cfg.outputParticleMeasurementsMap = outputParticleMeasurementsMap
+    cfg.outputIndexingMap = outputIndexingMap
     
     HitRemoverAlg = HitRemoverAlgorithm(
         config = cfg,
@@ -322,3 +325,26 @@ def addTrackPerformanceWriters(
             filePath=str(outputDirRoot / f"performance_seeding.root"),
         )
     )
+
+def addTrackMerger(
+        sequence: acts.examples.Sequencer,
+        inputTrackCollections : str,
+        inputIndexingMaps : str,
+        outputTrackCollection : str,
+        logLevel : acts.logging.Level = None):
+
+    customLogLevel = acts.examples.defaultLogging(sequence, logLevel)
+    
+    cfg = TrackMergerAlgorithm.Config()
+    cfg.inputTrackCollections  = inputTrackCollections
+    cfg.inputIndexingMaps      = inputIndexingMaps
+    cfg.outputTrackCollection  = outputTrackCollection
+
+    TrackMergerAlg = TrackMergerAlgorithm(
+    config = cfg,
+    level = customLogLevel())
+    
+        
+    sequence.addAlgorithm(TrackMergerAlg)
+
+    
