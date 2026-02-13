@@ -213,13 +213,13 @@ alice3_seeding.addSeeding(
     s,
     trackingGeometry,
     field,
-    #geoSelectionConfigFile = tutorial_dir / "seedingGeoSelections/geoSelection-alice3-cfg10.json",
-    geoSelectionConfigFile = tutorial_dir / "seedingGeoSelections/geoSelectionForSeeding_VD.json",
-    seedFinderConfigArg = alice3_seeding.DefaultSeedFinderConfigArg,
+    geoSelectionConfigFile = tutorial_dir / "seedingGeoSelections/geoSelection-alice3-cfg10.json",
+    #geoSelectionConfigFile = tutorial_dir / "seedingGeoSelections/geoSelectionForSeeding_VD.json",
+    seedFinderConfigArg = alice3_seeding.PavelSeedFinderConfigArg,
     seedFinderOptionsArg = alice3_seeding.DefaultSeedFinderOptionsArg,
-    seedFilterConfigArg = alice3_seeding.DefaultSeedFilterConfigArg,
-    spacePointGridConfigArg = alice3_seeding.DefaultSpacePointGridConfigArg,
-    seedingAlgorithmConfigArg = alice3_seeding.DefaultSeedingAlgorithmConfigArg,
+    seedFilterConfigArg = alice3_seeding.PavelSeedFilterConfigArg,
+    spacePointGridConfigArg = alice3_seeding.PavelSpacePointGridConfigArg,
+    seedingAlgorithmConfigArg = alice3_seeding.PavelSeedingAlgorithmConfigArg,
     outputDirRoot=outputDir,
     initialSigmas=[
         1 * u.mm,
@@ -285,7 +285,7 @@ if (doIterativeTracking):
     mergedTrackCollection = "seed-tracks-merged"
     outputIndexingMaps = []
     
-    for iteration in range(1,2):
+    for iteration in range(1,3):
 
         inputMeasurements = "measurements"
         inputMeasurementParticlesMap="measurement_particles_map"
@@ -332,13 +332,13 @@ if (doIterativeTracking):
             s,
             trackingGeometry,
             field,
-            #geoSelectionConfigFile = tutorial_dir / "seedingGeoSelections/geoSelection-alice3-cfg10.json",
-            geoSelectionConfigFile = tutorial_dir / "seedingGeoSelections/geoSelectionForSeeding_VD.json",
+            geoSelectionConfigFile = tutorial_dir / "seedingGeoSelections/geoSelection-alice3-cfg10.json",
+            #geoSelectionConfigFile = tutorial_dir / "seedingGeoSelections/geoSelectionForSeeding_VD.json",
             seedFinderConfigArg       = alice3_seeding.get_seed_finder_config(iteration),
             seedFinderOptionsArg      = alice3_seeding.DefaultSeedFinderOptionsArg,
-            seedFilterConfigArg       = alice3_seeding.DefaultSeedFilterConfigArg,
-            spacePointGridConfigArg   = alice3_seeding.DefaultSpacePointGridConfigArg,
-            seedingAlgorithmConfigArg = alice3_seeding.DefaultSeedingAlgorithmConfigArg,
+            seedFilterConfigArg       = alice3_seeding.PavelSeedFilterConfigArg,
+            spacePointGridConfigArg   = alice3_seeding.PavelSpacePointGridConfigArg,
+            seedingAlgorithmConfigArg = alice3_seeding.PavelSeedingAlgorithmConfigArg,
             outputDirRoot=outputDir,
             initialSigmas=[
                 1 * u.mm,
@@ -364,21 +364,19 @@ if (doIterativeTracking):
                                   trackCollectionForMerging,
                                   outputIndexingMaps,
                                   mergedTrackCollection,
-                                  acts.logging.INFO,
+                                  acts.logging.DEBUG,
                                   )
 
 
-    s.addAlgorithm(
-        acts.examples.TrackTruthMatcher(
-            level=acts.logging.INFO,
-            inputTracks=mergedTrackCollection,
-            inputParticles="particles_selected",
-            inputMeasurementParticlesMap="measurement_particles_map",
-            outputTrackParticleMatching="seed_merged_particle_matching",
-            outputParticleTrackMatching="particle_seed_merged_matching",
-            matchingRatio=1.0,
-            doubleMatching=False)
-        )
+
+    alice3_writers.addTrackTruthMatcher(
+        s,
+        inputTracks=mergedTrackCollection,
+        inputParticles="particles_selected",
+        inputMeasurementParticlesMap="measurement_particles_map",
+        outputTrackParticleMatching="seed_merged_particle_matching",
+        outputParticleTrackMatching="particle_seed_merged_matching",
+    )
     
     
     s.addWriter(

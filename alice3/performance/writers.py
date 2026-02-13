@@ -149,6 +149,8 @@ def addCKFTracks(
     truthMatchCfg.inputMeasurementParticlesMap="measurement_particles_map"
     truthMatchCfg.outputTrackParticleMatching="ckf_track_particle_matching"
     truthMatchCfg.outputParticleTrackMatching="ckf_particle_track_matching"
+    truthMatchCfg.matchingRatio=1.0
+    truthMatchCfg.doubleMatching=False
     truthMatchCfg.looperProtection=True
     truthMatchCfg.loop_absEta = 1.5
     truthMatchCfg.loop_maxPt  = 0.2
@@ -182,6 +184,43 @@ def addCKFTracks(
     )
 
     return s
+
+
+def addTrackTruthMatcher(
+        s : acts.examples.Sequencer,
+        inputTracks : str,
+        inputParticles : str,
+        inputMeasurementParticlesMap : str,
+        outputTrackParticleMatching : str,
+        outputParticleTrackMatching : str,
+        looperProtection : str = True,
+        loop_absEta : str = 1.5,
+        loop_maxPt : str = 1.,
+        loop_maxParticleHits : int = 11,
+        logLevel: Optional[acts.logging.Level] = None,
+):
+    
+    truthMatchCfg = TrackTruthMatcher.Config()
+    truthMatchCfg.inputTracks=inputTracks
+    truthMatchCfg.inputParticles=inputParticles
+    truthMatchCfg.inputMeasurementParticlesMap=inputMeasurementParticlesMap
+    truthMatchCfg.outputTrackParticleMatching=outputTrackParticleMatching
+    truthMatchCfg.outputParticleTrackMatching=outputParticleTrackMatching
+    truthMatchCfg.matchingRatio=1.0
+    truthMatchCfg.doubleMatching=False
+    truthMatchCfg.looperProtection=True
+    truthMatchCfg.loop_absEta = 1.5
+    truthMatchCfg.loop_maxPt  = 1.
+    truthMatchCfg.loop_maxParticleHits = 11
+    
+    customLogLevel = acts.examples.defaultLogging(s, logLevel)
+    
+    matchAlg = TrackTruthMatcher(
+        config = truthMatchCfg,
+        level=customLogLevel())
+    
+    s.addAlgorithm(matchAlg)
+    
 
 def addTrackWriters(
     s: acts.examples.Sequencer,
