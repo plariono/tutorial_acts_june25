@@ -118,63 +118,6 @@ def getArgumentParser():
         default=2,  # ok for pp, for PbPb should be 3 or more?
     )
 
-    ##### REC: tracking params
-    parser.add_argument(
-        "--nMeasurementsMin",
-        dest="nMeasurementsMin",
-        help="nMeasurementsMin",
-        type=int,
-        default=7,
-    )
-    parser.add_argument(
-        "--ckfMeasPerSurf",
-        dest="ckfMeasPerSurf",
-        help="ckf maxNumAssocMeasOnSurface",
-        type=int,
-        default=1,
-    )
-    parser.add_argument(
-        "--ckfChi2Measurement",
-        dest="ckfChi2Measurement",
-        help="ckfChi2Measurement",
-        type=float,
-        default=45,
-    )
-    parser.add_argument(
-        "--ckfChi2Outlier",
-        dest="ckfChi2Outlier",
-        help="ckfChi2Outlier",
-        type=float,
-        default=100,
-    )
-
-    parser.add_argument(
-        "--maxSharedHits",
-        dest="maxSharedHits",
-        help="max number of shared hits. Doesn't have impact if the hit-smearing digi is used.",
-        type=int,
-        default=2,
-    )
-
-    parser.add_argument(
-        "--twoWayCKF",
-        help="Set twoWayCKF option for CKF",
-        action="store_true",  # default is false
-        default=True,
-    )
-    parser.add_argument(
-        "--seedDeduplication",
-        help="Set seedDeduplication option for CKF",
-        action="store_true",  # default is false
-        default=True,
-    )
-    parser.add_argument(
-        "--stayOnSeed",
-        help="Set stayOnSeed option for CKF",
-        action="store_true",  # default is false
-        default=False,
-    )
-
     ##### Special flags for tracking in several iterations
     parser.add_argument(
         "--iterationId",
@@ -193,10 +136,6 @@ def getArgumentParser():
                         help="seed to use in the random number generator",
                         type=int,
                         default=42)
-
-    parser.add_argument("--digi_configuration", "--digi",
-                        help="Configuration of the digitization",
-                        default="digi-smearing-config_no_TOFs_iTOF_removed.json")
     #####
     return parser
 
@@ -227,11 +166,11 @@ IA_outputDirName = (
     + "_PID"
     + str(cfg.particleGun.gunPID)
     + "_nMeasMin"
-    + str(pars.nMeasurementsMin)
+    + str(cfg.tracking.nMeasurementsMin)
     + "_ckfChi2Meas"
-    + str(pars.ckfChi2Measurement)
+    + str(cfg.tracking.ckfChi2Measurement)
     + "_ckfMeasPerSurf"
-    + str(pars.ckfMeasPerSurf)
+    + str(cfg.tracking.ckfMeasPerSurf)
     # + "_B"
     # + str(pars.MF)
     # + "_PU"
@@ -239,7 +178,7 @@ IA_outputDirName = (
     # + "_iterationId"
     # + str(pars.iterationId)
 )
-# +"_twoWayCKF_"+str(pars.twoWayCKF) +"_seedDeduplication_"+str(pars.seedDeduplication)  +"_stayOnSeed_"+str(pars.stayOnSeed) \
+
 
 
 outputDir = pathlib.Path.cwd() / IA_outputDirName
@@ -480,10 +419,6 @@ s = addDigitization(
     # doMerge=True,   ##!! 
 )
 
-# for details on segmented digi: class Channelizer {..} https://github.com/acts-project/acts/blob/v36.3.2/Fatras/include/ActsFatras/Digitization/Channelizer.hpp#L21
-# auto channelsRes = m_channelizer.channelize() - https://github.com/acts-project/acts/blob/v36.2.1/Examples/Algorithms/Digitization/src/DigitizationAlgorithm.cpp#L212
-
-
 # addDigiParticleSelection(
 #     s,
 #     ParticleSelectorConfig(
@@ -624,7 +559,7 @@ s = addSeeding(
     outputDirRoot=outputDir,
 )
 
-# from https://github.com/acts-project/acts/blob/v41.0.0/Examples/Scripts/Python/hashing_seeding.py:
+
 if False:  # if we want to save seeds to root file
     rootSeedsWriter = acts.examples.RootSeedWriter(
         level=acts.logging.VERBOSE,
@@ -642,24 +577,24 @@ if False:  # if we want to save seeds to root file
 #     logLevel = acts.logging.VERBOSE
 # )
 
-### useful info: https://github.com/acts-project/acts/blob/main/Core/include/Acts/TrackFinding/MeasurementSelector.hpp
+
 s = addCKFTracks(
     s,
     trackingGeometry,
     field,
     TrackSelectorConfig(
         pt=(0.06 * u.GeV, 120 * u.GeV),
-        nMeasurementsMin=pars.nMeasurementsMin,
-        maxSharedHits=pars.maxSharedHits,
-    ),  # IA, was: 500.0 * u.MeV
-    ckfConfig=CkfConfig(
-        chi2CutOffOutlier=pars.ckfChi2Outlier,
-        chi2CutOffMeasurement=pars.ckfChi2Measurement,
-        numMeasurementsCutOff=pars.ckfMeasPerSurf,
-        seedDeduplication=pars.seedDeduplication,
-        stayOnSeed=pars.stayOnSeed,
+        nMeasurementsMin=cfg.tracking.nMeasurementsMin,
+        maxSharedHits=cfg.tracking.maxSharedHits,
     ),
-    twoWay=pars.twoWayCKF,  # default: True,
+    ckfConfig=CkfConfig(
+        chi2CutOffOutlier=cfg.tracking.ckfChi2Outlier,
+        chi2CutOffMeasurement=cfg.tracking.ckfChi2Measurement,
+        numMeasurementsCutOff=cfg.tracking.ckfMeasPerSurf,
+        seedDeduplication=cfg.tracking.seedDeduplication,
+        stayOnSeed=cfg.tracking.stayOnSeed,
+    ),
+    twoWay=cfg.tracking.twoWayCKF,
     outputDirRoot=outputDir,
     writeTrackSummary=False,
     logLevel=acts.logging.INFO,
@@ -668,7 +603,7 @@ s = addCKFTracks(
 s = addAmbiguityResolution(
     s,
     AmbiguityResolutionConfig(
-        maximumSharedHits=pars.maxSharedHits, nMeasurementsMin=pars.nMeasurementsMin
+        maximumSharedHits=cfg.tracking.maxSharedHits, nMeasurementsMin=cfg.tracking.nMeasurementsMin
     ),
     outputDirRoot=outputDir,
     logLevel=acts.logging.INFO,
@@ -685,15 +620,3 @@ s = addVertexFitting(
 
 s.run()
 
-### save script used
-
-shutil.copyfile(os.path.abspath(__file__), os.path.join(os.getcwd(), IA_outputDirName, os.path.basename(__file__)))
-# with open("lastRun.txt", "w") as fh:
-#     fh.write(IA_outputDirName + "\n")
-
-### save command line used
-
-cmd = " ".join(sys.argv)
-with open(os.path.join(os.getcwd(), IA_outputDirName, "full_chain_used_command_line_args.log"), "a") as f:
-    f.write(f"{datetime.now()}\n")
-    f.write(f"{cmd}\n")
