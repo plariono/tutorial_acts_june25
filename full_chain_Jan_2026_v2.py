@@ -88,36 +88,6 @@ def getArgumentParser():
         default="test",
     )
 
-    parser.add_argument(
-        "--impParForSeeds",
-        dest="impParForSeeds",
-        help="max impact parameter for track seeds, mm",
-        type=float,
-        default=1.0,  # mm
-    )
-    parser.add_argument(
-        "--radLengthPerSeed",
-        dest="radLengthPerSeed",
-        help="Average Radiation Length per seed",
-        type=float,
-        default=0.05,  # BEST TUNED WITH PARTICLE GUN - May 16. 2025 - if combined with sigmaScattering = 5
-    )
-    parser.add_argument(
-        "--sigmaScattering",
-        dest="sigmaScattering",
-        help="How many sigmas of scattering to include in seeds",
-        type=float,
-        default=5.0,  # BEST TUNED WITH PARTICLE GUN - May 16. 2025 - if combined with radLengthPerSeed = 0.05
-    )
-
-    parser.add_argument(
-        "--maxSeedsPerSpM",
-        dest="maxSeedsPerSpM",
-        help="max number of seeds per seed middle spacepoint",
-        type=int,
-        default=2,  # ok for pp, for PbPb should be 3 or more?
-    )
-
     ##### Special flags for tracking in several iterations
     parser.add_argument(
         "--iterationId",
@@ -148,14 +118,8 @@ pars = getArgumentParser().parse_args()
 ##########################
 
 IA_collisionRegion_forSeeds = (
-    250 if pars.impParForSeeds < 2.0 else 1000
+    250 if cfg.seeding.impParForSeeds < 2.0 else 1000
 )  # mm; large values - for V0 daughter reconstruction
-
-IA_whichSeedingAlg = SeedingAlgorithm.GridTriplet
-
-IA_maxSeedsPerSpMConf = 1
-IA_maxQualitySeedsPerSpMConf = 1
-IA_enableMaterial = True
 
 ### output directory
 IA_outputDirName = (
@@ -188,7 +152,7 @@ if not outputDir.exists():
     outputDir.mkdir(mode=0o777, parents=True, exist_ok=True)
 
 detector = buildALICE3Geometry.buildALICE3Geometry(
-    geo_dir, IA_enableMaterial, False, acts.logging.INFO
+    geo_dir, cfg.general.enableMaterial, False, acts.logging.INFO
 )
 trackingGeometry = detector.trackingGeometry()
 decorators = detector.contextDecorators()
@@ -458,12 +422,11 @@ s = addSeeding(
             IA_collisionRegion_forSeeds * u.mm,
         ),
         z=(-1000 * u.mm, 1000 * u.mm),
-        maxSeedsPerSpM=pars.maxSeedsPerSpM,  # 2 is minimum, >2 is better for Pb-Pb
-        sigmaScattering=pars.sigmaScattering,
-        # more info: https://github.com/acts-project/acts/blob/main/Core/include/Acts/Seeding/SeedFinderConfig.hpp
-        radLengthPerSeed=pars.radLengthPerSeed,
+        maxSeedsPerSpM=cfg.seeding.maxSeedsPerSpM,  # 2 is minimum, >2 is better for Pb-Pb
+        sigmaScattering=cfg.seeding.sigmaScattering,
+        radLengthPerSeed=cfg.seeding.radLengthPerSeed,
         minPt=cfg.seeding.minSeedPt * u.GeV,
-        impactMax=pars.impParForSeeds
+        impactMax=cfg.seeding.impParForSeeds
         * u.mm,  # important! IB vs ML seeds (e.g. 1 mm is ok for IB seeds, 5 mm - for ML seeds)
         cotThetaMax=27.2899,
         seedConfirmation=True,
@@ -488,15 +451,14 @@ s = addSeeding(
     ),
     SeedFinderOptionsArg(bFieldInZ=cfg.seeding.bField * u.T, beamPos=(0 * u.mm, 0 * u.mm)),
     SeedFilterConfigArg(
-        seedConfirmation=True if pars.impParForSeeds < 2.0 else False,  # mm
+        seedConfirmation=True if cfg.seeding.impParForSeeds < 2.0 else False,  # mm
         # If seedConfirmation is true we classify seeds as "high-quality" seeds.
         # Seeds that are not confirmed as "high-quality" are only selected if no
         # other "high-quality" seed has been found for that inner-middle doublet
         # Maximum number of normal seeds (not classified as "high-quality" seeds)
         # in seed confirmation
-        maxSeedsPerSpMConf=IA_maxSeedsPerSpMConf,  # 1 - USED_FOR_AUG_2025,#3, # CRUCIAL!!!!!!
-        # 1 - USED_FOR_AUG_2025,   # Core/include/Acts/Seeding/SeedFilterConfig.hpp
-        maxQualitySeedsPerSpMConf=IA_maxQualitySeedsPerSpMConf,
+        maxSeedsPerSpMConf=cfg.seeding.filter_maxSeedsPerSpMConf,
+        maxQualitySeedsPerSpMConf=cfg.seeding.filter_maxQualitySeedsPerSpMConf,
         # Maximum number of "high-quality" seeds for each inner-middle SP-dublet in
         # seed confirmation. If the limit is reached we check if there is a normal
         # quality seed to be replaced

@@ -12,9 +12,11 @@ class General:
     digi_file: str = "geometries/geometry_2026_01_30_mockupTiledDisks_for_Geant_tests/digiConfigurations/digi-smearing-config_no_TOFs_iTOF_removed.json"
 
     # Geo 2
-    geo_dir: str = "geometries/geometry_2026_02_12_default_v3_cylindrical_barrel_tiled_disks/geom"
-    digi_file: str = "geometries/geometry_2026_02_12_default_v3_cylindrical_barrel_tiled_disks/digiConfigurations/digi-smearing-config_with_TOFs_noEndcapTOFs_noTimeInTOFs.json"
+    #geo_dir: str = "geometries/geometry_2026_02_12_default_v3_cylindrical_barrel_tiled_disks/geom"
+    #digi_file: str = "geometries/geometry_2026_02_12_default_v3_cylindrical_barrel_tiled_disks/digiConfigurations/digi-smearing-config_with_TOFs_noEndcapTOFs_noTimeInTOFs.json"
 
+    enableMaterial : bool = True
+    
 @dataclass
 class ParticleGunConfig:
     gunMult: int = 1
@@ -46,6 +48,14 @@ class seedingConfig:
     seedingLayers: str = "geoSelectionForSeeding_VD.json"
     seedingAlgo: Literal["GridTriplet","TruthSmeared"] = "GridTriplet"
     minSeedPt: float = 0.08
+    impParForSeeds: float = 1.0
+    sigmaScattering: float = 5
+    radLengthPerSeed: float = 0.05 
+    maxSeedsPerSpM: int = 2 
+    filter_maxSeedsPerSpMConf: int = 1
+    filter_maxQualitySeedsPerSpMConf: int = 1
+    
+    
 
 
 
