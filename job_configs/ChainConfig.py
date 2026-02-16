@@ -16,6 +16,7 @@ class General:
     #digi_file: str = "geometries/geometry_2026_02_12_default_v3_cylindrical_barrel_tiled_disks/digiConfigurations/digi-smearing-config_with_TOFs_noEndcapTOFs_noTimeInTOFs.json"
 
     enableMaterial : bool = True
+    doIterativeTracking : bool = False
     
 @dataclass
 class ParticleGunConfig:
@@ -54,21 +55,21 @@ class seedingConfig:
     maxSeedsPerSpM: int = 2 
     filter_maxSeedsPerSpMConf: int = 1
     filter_maxQualitySeedsPerSpMConf: int = 1
-    
-    
-
-
 
 @dataclass
 class trackingConfig:
+    minPt: float = 0.06
     nMeasurementsMin: int = 7
+    nHoles: int = 2
+    nOutliers: int = 2
+    maxSharedHits: int = 2
     ckfMeasPerSurf: int = 1
     ckfChi2Measurement: float = 45
     ckfChi2Outlier: float = 100
     seedDeduplication: bool = True
     stayOnSeed: bool = False
-    maxSharedHits: int = 2
     twoWayCKF: bool = True
+    writeTrackSummary: bool = True
     
     
 class Config:

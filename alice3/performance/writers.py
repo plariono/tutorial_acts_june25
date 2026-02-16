@@ -1,16 +1,25 @@
 from pathlib import Path
-from typing import Optional, Union, List
+from typing import Optional, Union, List, Literal
 from enum import Enum
 from collections import namedtuple
+import pathlib
 
 import acts
 import acts.examples
 import acts.examples.reconstruction as acts_reco
+from acts import UnitConstants as u
+
+#Load config
+from job_configs import ChainConfig
+cfg = ChainConfig.Config()
 
 #Alice3 specific algorithms
 from AliceActsPythonBindings import TrackTruthMatcher
 from AliceActsPythonBindings import HitRemoverAlgorithm
 from AliceActsPythonBindings import TrackMergerAlgorithm
+
+#Alice3 seeding
+import alice3.performance.seeding as alice3_seeding
 
 # Alice3 plotting
 import alice3.performance.plotting as alice3_plotting
@@ -387,3 +396,109 @@ def addTrackMerger(
     sequence.addAlgorithm(TrackMergerAlg)
 
     
+def addIterativeTracking(
+        s : acts.examples.Sequencer = None,
+        geo_dir : pathlib.Path = None,
+        trackingGeometry : acts.TrackingGeometry = None,
+        field: Literal[acts.MagneticFieldMapRz, acts.MagneticFieldMapXyz] = None,
+        iterations: int = 3,
+        inputTracks: str = "ckf_tracks",
+        outputDir: Optional[Union[Path, str]] = None,):
+    
+        trackCollectionForMerging = ["seed-tracks"]
+        mergedTrackCollection = "seed-tracks-merged"
+        outputIndexingMaps = []
+        for iteration in range(1,iterations):
+            inputMeasurements = "measurements"
+            inputMeasurementParticlesMap="measurement_particles_map"
+            if iteration > 1:
+                inputMeasurements = "measurements_iter_"+str(iteration-1)
+                inputMeasurementParticlesMap = "measurement_particles_map_iter_"+str(iteration-1)
+
+            used_meas_idxs    = "used_meas_idxs_iter_"+str(iteration)
+            outputMeasurements= "measurements_iter_"+str(iteration)
+            outputSpacePoints = "spacepoints_iter_"+str(iteration)
+            outputMeasurementParticlesMap = "measurement_particles_map_iter_"+str(iteration)
+            outputParticleMeasurementsMap = "particle_measurements_map_iter_"+str(iteration)
+            outputIndexingMap = "measurement_indexingMap_iter_"+str(iteration)
+
+
+            # Each iteration of tracking uses left over hits
+
+            addHitRemoverAlgorithm(
+                s,
+                inputMeasurements=inputMeasurements,
+                inputTracks=inputTracks,
+                inputMeasurementParticlesMap=inputMeasurementParticlesMap,
+                sortByOldIndex=True,
+                used_meas_idxs=used_meas_idxs,
+                outputMeasurements=outputMeasurements,
+                outputMeasurementParticlesMap=outputMeasurementParticlesMap,
+                outputParticleMeasurementsMap=outputParticleMeasurementsMap,
+                outputIndexingMap=outputIndexingMap,
+                logLevel=acts.logging.INFO)
+                        
+            alice3_seeding.addSeeding(
+                s,
+                trackingGeometry,
+                field,
+                geoSelectionConfigFile    = geo_dir / "../seedingConfigurations" / cfg.seeding.seedingLayers,
+                seedFinderConfigArg       = alice3_seeding.get_seed_finder_config(iteration),
+                seedFinderOptionsArg      = alice3_seeding.DefaultSeedFinderOptionsArg,
+                seedFilterConfigArg       = alice3_seeding.PavelSeedFilterConfigArg,
+                spacePointGridConfigArg   = alice3_seeding.PavelSpacePointGridConfigArg,
+                seedingAlgorithmConfigArg = alice3_seeding.PavelSeedingAlgorithmConfigArg,
+                outputDirRoot=outputDir,
+                initialSigmas=[
+                    1 * u.mm,
+                    1 * u.mm,
+                    1 * u.degree,
+                    1 * u.degree,
+                    0.1 * u.e / u.GeV,
+                    1 * u.ns,
+                ],
+                initialSigmaPtRel=0.1,
+                initialVarInflation=alice3_seeding.PavelInitialVarInflation,
+                particleHypothesis=acts.ParticleHypothesis.pion,
+                inputMeasurements = outputMeasurements,
+                outputSpacePoints = outputSpacePoints,
+                iterationIndex = iteration,
+            )
+
+            # Add the seed tracks for merging and the measurement mapping for this iteration
+            trackCollectionForMerging.append("seed-tracks_iter_"+str(iteration))
+            outputIndexingMaps.append(outputIndexingMap)
+
+            
+        addTrackMerger(s,
+                       trackCollectionForMerging,
+                       outputIndexingMaps,
+                       mergedTrackCollection,
+                       acts.logging.DEBUG,
+                       )
+        
+
+        addTrackTruthMatcher(
+            s,
+            inputTracks=mergedTrackCollection,
+            inputParticles="particles_selected",
+            inputMeasurementParticlesMap="measurement_particles_map",
+            outputTrackParticleMatching="seed_merged_particle_matching",
+            outputParticleTrackMatching="particle_seed_merged_matching",
+        )
+        
+        
+        s.addWriter(
+            acts.examples.root.RootTrackFinderPerformanceWriter(
+                level=acts.logging.DEBUG,
+                inputTracks=mergedTrackCollection,
+                inputParticles="particles_selected",
+                inputTrackParticleMatching="seed_merged_particle_matching",
+                inputParticleTrackMatching="particle_seed_merged_matching",
+                inputParticleMeasurementsMap="particle_measurements_map",
+                effPlotToolConfig = alice3_plotting.effPlotToolConfig,
+                fakePlotToolConfig = alice3_plotting.fakePlotToolConfig,
+                filePath=str(outputDir / "performance_merged_seed.root"),
+            )
+        )
+        
