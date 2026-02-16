@@ -6,6 +6,8 @@ from dataclasses import dataclass
 class General:
     fieldMap: str = "fieldmaps/solenoid_R1625_L7500_B2T_scaled.txt"
     MF: float = 2.0 #T
+    geo_dir: str = "geometries/geometry_2026_01_30_mockupTiledDisks_for_Geant_tests/geom"
+    digi_file: str = "geometries/geometry_2026_01_30_mockupTiledDisks_for_Geant_tests/digiConfigurations/digi-smearing-config_no_TOFs_iTOF_removed.json"
 
 @dataclass
 class ParticleGunConfig:
@@ -36,6 +38,9 @@ class detSimConfig:
 class seedingConfig:
     bField : float = 2.0 #T
     seedingLayers: str = "geoSelectionForSeeding_VD.json"
+    seedingAlgo: Literal["GridTriplet","TruthSmeared"] = "GridTriplet"
+    minSeedPt: float = 0.08
+    
     
 class Config:
     general = General()

@@ -48,16 +48,17 @@ import acts.examples
 #import alice3
 import acts.examples.geant4
 
-# bit ugly but should make it easier to switch geometries
-from geom import buildALICE3Geometry
-
 ## Configurations
 from job_configs import ChainConfig
 cfg = ChainConfig.Config()
 
 u = acts.UnitConstants
 
-geo_dir = pathlib.Path(os.path.abspath(os.path.dirname(__file__))) / "geom"
+geo_dir = pathlib.Path(os.path.abspath(os.path.dirname(__file__))) / cfg.general.geo_dir
+print("Loading geometry from ... ",str(geo_dir))
+sys.path.insert(0,str(pathlib.Path(geo_dir).resolve()))
+
+import buildALICE3Geometry
 
 
 def getArgumentParser():
@@ -85,32 +86,6 @@ def getArgumentParser():
         help="Dir for output",
         type=str,
         default="test",
-    )
-
-    ##### REC: Seeding params
-    parser.add_argument(
-        "--seedingLayers",
-        type=str,
-        choices=["VD", "ML3", "MLall", "VDML"],
-        required=False,
-        default="VD",
-        help="Choose seeding layers",
-    )
-    parser.add_argument(
-        "--seedingAlgo",
-        type=str,
-        choices=["Default", "GridTriplet"],
-        required=False,
-        default="GridTriplet",
-        help="Choose seeding algo",
-    )
-
-    parser.add_argument(
-        "--minSeedPt",
-        dest="minSeedPt",
-        help="min pt for seed candidates, GeV/c",
-        type=float,
-        default=0.08,
     )
 
     parser.add_argument(
@@ -237,11 +212,7 @@ IA_collisionRegion_forSeeds = (
     250 if pars.impParForSeeds < 2.0 else 1000
 )  # mm; large values - for V0 daughter reconstruction
 
-IA_whichSeedingAlg = (
-    SeedingAlgorithm.GridTriplet
-)  # Nov 2025: is the default in addSeeding!
-if pars.seedingAlgo == "Default":
-    IA_whichSeedingAlg = SeedingAlgorithm.Default
+IA_whichSeedingAlg = SeedingAlgorithm.GridTriplet
 
 IA_maxSeedsPerSpMConf = 1
 IA_maxQualitySeedsPerSpMConf = 1
@@ -428,10 +399,6 @@ else:  # use already generated particles
     s.addReader(
         acts.examples.RootParticleReader(
             level=acts.logging.INFO,
-            # filePath="./output/testIterations_iterId"+str(pars.iterationId)+"/hits.root",
-            # filePath=IA_outputDirName + "/particles.root",
-            # filePath="/Users/igor/ALICE3/geometry_2025_12_17_test_Geant4_WORKS_FOR_TRK_FT3/output/TEST_GEANT_Gun_Test_pion_widePt_nEv50000_B2.0_PU1_iterationId0/particles.root",
-            # filePath="/Users/igor/ALICE3/geometry_2025_12_17_test_Geant4_WORKS_FOR_TRK_FT3/output/TEST_GEANT_Gun_Test_muon_widePt_GEOM_V3_THIN_LAYERS_nEv200000_PID13_nMeasMin7_ckfChi2Meas45.0_ckfMeasPerSurf1_BEFORE_CLUSTERS/particles.root",
             filePath="/Users/igor/ALICE3/geometry_2025_12_17_test_Geant4_WORKS_FOR_TRK_FT3/output/TEST_GEANT_PYTHIA_V3_nEv5000_PID211_nMeasMin7_ckfChi2Meas45.0_ckfMeasPerSurf1_BEFORE_CLUSTERS/particles.root",
             outputParticles="particles_generated",  # _generated",
             # outputSimHits="simhits",
@@ -506,7 +473,7 @@ s = addDigitization(
     s,
     trackingGeometry,
     field,
-    digiConfigFile=geo_dir / "../digiConfigurations" / pars.digi_configuration,
+    digiConfigFile= cfg.general.digi_file,
     outputDirRoot=outputDir,
     rnd=rnd,
     logLevel=acts.logging.INFO,
@@ -541,18 +508,6 @@ s = addDigitization(
 # )
 
 
-strWhichSeedingLayers = ""
-if pars.seedingLayers == "VD":
-    strWhichSeedingLayers = "geoSelectionForSeeding_VD.json"
-elif pars.seedingLayers == "ML3":
-    strWhichSeedingLayers = "geoSelectionForSeeding_3firstML.json"
-elif pars.seedingLayers == "MLall":
-    strWhichSeedingLayers = "geoSelectionForSeeding_5ML.json"
-elif pars.seedingLayers == "VDML":
-    strWhichSeedingLayers = "geoSelectionForSeeding_IB_ML.json"
-print("strWhichLayers=", strWhichSeedingLayers)
-
-
 s = addSeeding(
     s,
     trackingGeometry,
@@ -572,7 +527,7 @@ s = addSeeding(
         sigmaScattering=pars.sigmaScattering,
         # more info: https://github.com/acts-project/acts/blob/main/Core/include/Acts/Seeding/SeedFinderConfig.hpp
         radLengthPerSeed=pars.radLengthPerSeed,
-        minPt=pars.minSeedPt * u.GeV,
+        minPt=cfg.seeding.minSeedPt * u.GeV,
         impactMax=pars.impParForSeeds
         * u.mm,  # important! IB vs ML seeds (e.g. 1 mm is ok for IB seeds, 5 mm - for ML seeds)
         cotThetaMax=27.2899,
@@ -664,14 +619,9 @@ s = addSeeding(
         # ],
         # numPhiNeighbors=1,
     ),
-    # particleHypothesis=acts.ParticleHypothesis.pion, # IA
-    # particleHypothesis=acts.ParticleHypothesis.electron, # IA
-    geoSelectionConfigFile=geo_dir / "../seedingConfigurations" / strWhichSeedingLayers,
-    # seedingAlgorithm=SeedingAlgorithm.TruthSmeared,
-    seedingAlgorithm=IA_whichSeedingAlg,  # SeedingAlgorithm.Default, # Nov 2025: default is GridTriplet !!!
+    geoSelectionConfigFile=geo_dir / "../seedingConfigurations" / cfg.seeding.seedingLayers,
+    seedingAlgorithm = SeedingAlgorithm.GridTriplet if cfg.seeding.seedingAlgo == "GridTriplet" else "TruthSmeared",
     outputDirRoot=outputDir,
-    #    initialVarInflation = (50,50,50,50,50,50)  # IA
-    #    initialVarInflation = (0.2,0.2,0.2,0.2,0.2,0.2)  #IA
 )
 
 # from https://github.com/acts-project/acts/blob/v41.0.0/Examples/Scripts/Python/hashing_seeding.py:
