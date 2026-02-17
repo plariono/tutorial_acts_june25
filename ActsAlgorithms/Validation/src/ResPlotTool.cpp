@@ -157,7 +157,7 @@ void ResPlotTool::fill(const Acts::GeometryContext& gctx,
 
   // relative pT resolution sigma(pT)/pT = p*sigma(q/p)
   double qop_residual = trackParameter[Acts::eBoundQOverP] - truthParameter[Acts::eBoundQOverP];
-  double rel_pt_residual = trackParameter[Acts::eBoundQOverP] * qop_residual;
+  double rel_pt_residual = std::abs(1. / trackParameter[Acts::eBoundQOverP]) * qop_residual;
 
   //for (const auto& it : m_res){
   //  std::cout<<"PF::KEY="<<it.first<<std::endl;
