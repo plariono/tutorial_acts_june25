@@ -186,19 +186,6 @@ else:
         outputDir=outputDir)
     
         
-#s.addReader(
-#        acts.examples.RootParticleReader(
-#            level=acts.logging.INFO,
-#            filePath="/Users/igor/ALICE3/geometry_2025_12_17_test_Geant4_WORKS_FOR_TRK_FT3/output/TEST_GEANT_PYTHIA_V3_nEv5000_PID211_nMeasMin7_ckfChi2Meas45.0_ckfMeasPerSurf1_BEFORE_CLUSTERS/particles.root",
-#            outputParticles="particles_generated",  # _generated",
-#            # outputSimHits="simhits",
-#            # particleCollection="particles",
-#            # inputDir="output",
-#            # inputFile="pythia8_particles.root",
-#        )
-#    )
-#    s.addWhiteboardAlias("particles", "particles_generated")
-
 addGenParticleSelection(
     s,
     ParticleSelectorConfig(
@@ -401,14 +388,6 @@ s = addSeeding(
     seedingAlgorithm = SeedingAlgorithm.GridTriplet if cfg.seeding.seedingAlgo == "GridTriplet" else "TruthSmeared",
     outputDirRoot=outputDir,
 )
-
-
-# s = addHoughVertexFinding(
-#     s,
-#     outputDirRoot=outputDir,
-#     inputSpacePoints="spacepoints",
-#     logLevel = acts.logging.VERBOSE
-# )
 
 
 alice3_writers.addCKFTracks(
