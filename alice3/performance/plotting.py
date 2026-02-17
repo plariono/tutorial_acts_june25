@@ -1,9 +1,11 @@
 import acts
 import acts.examples
 
+from AliceActsPythonBindings import ResPlotToolConfig
+
 #Residual Plots
 
-resPlotToolConfig = acts.examples.root.ResPlotToolConfig()
+resPlotToolConfig = ResPlotToolConfig()
 binning = resPlotToolConfig.varBinning
 binning["Eta"] = acts.examples.root.AxisVariant.regular(80, -4,    4,     "#eta")
 binning["Pt"] =  acts.examples.root.AxisVariant.regular(1000, -0,    50,     "pT [GeV/c]")

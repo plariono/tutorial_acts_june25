@@ -20,4 +20,10 @@ PYBIND11_MODULE(AliceActsPythonBindings, mex) {
     AliceActsPython::addHitRemoverAlgorithm(mex);
 
     AliceActsPython::addTrackMergerAlgorithm(mex);
+
+
+    // Validation
+    AliceActsPython::addResPlotTool(mex);
+    AliceActsPython::addRootTrackFitterPerformanceWriter(mex);
+    
 }
