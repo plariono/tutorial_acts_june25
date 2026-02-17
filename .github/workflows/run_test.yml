@@ -22,6 +22,8 @@ jobs:
     steps:
     
     - uses: actions/checkout@v4
+      with:
+        submodules: recursive 
     - uses: cvmfs-contrib/github-action-cvmfs@v4
     - uses: aidasoft/run-lcg-view@v5
       with:
