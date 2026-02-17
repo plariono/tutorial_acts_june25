@@ -22,8 +22,11 @@ jobs:
     steps:
     
     - uses: actions/checkout@v4
-      with:
-        submodules: recursive 
+      env:
+        GITLAB_TOKEN: ${{ secrets.glpat-YGMsYRMQg8SPShrxMdfDqW86MQp1OjJnbG4K.01.100xfd1cc }}
+      run: |
+        git config --global url."https://oauth2:${GITLAB_TOKEN}@gitlab.cern.ch/".insteadOf "https://gitlab.cern.ch/"
+        git submodule update --init --recursive
     - uses: cvmfs-contrib/github-action-cvmfs@v4
     - uses: aidasoft/run-lcg-view@v5
       with:
