@@ -12,6 +12,7 @@ binning["Pt"] =  acts.examples.root.AxisVariant.regular(1000, -0,    50,     "pT
 binning["Residual_phi"] =  acts.examples.root.AxisVariant.regular(200, -0.02,    0.02,     "r_{#phi} [rad]")
 binning["Residual_theta"] =  acts.examples.root.AxisVariant.regular(200, -0.02,    0.02,     "r_{#theta} [rad]")
 binning["Residual_qop"] =  acts.examples.root.AxisVariant.regular(200, -0.2,    0.2,     "r_{q/p} [c/GeV]")
+binning["Residual_pt_o_pt"] =  acts.examples.root.AxisVariant.regular(100, -0.1,    0.1,     "r_{p_{T}}/p_{T}")
 resPlotToolConfig.varBinning = binning
 
 # Duplication Plots
