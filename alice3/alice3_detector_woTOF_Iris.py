@@ -21,8 +21,8 @@ def buildALICE3Geometry(
     logger = acts.logging.getLogger("buildALICE3Geometry")
     
     if material:
-        file = geo_dir / "geom/iris4/material-map.json"
-        zip_file = geo_dir / "geom/iris4/material-map-iris4.json.zip"
+        file = geo_dir / "old_geom/iris4/material-map.json"
+        zip_file = geo_dir / "old_geom/iris4/material-map-iris4.json.zip"
 
         # check if JSON exists
         if not file.exists():
@@ -44,7 +44,7 @@ def buildALICE3Geometry(
         )
 
     tgeo_fileName = geo_dir / \
-        "geom/iris4/o2sim_geometry.root"
+        "old_geom/iris4/o2sim_geometry.root"
 
     if jsonconfig:
         jsonFile = geo_dir / "acts/bin/tgeo-config.json"
