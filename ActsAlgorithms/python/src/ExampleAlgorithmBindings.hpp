@@ -6,11 +6,17 @@
 #include "HitRemoverAlgorithm.hpp"
 #include "TrackMergerAlgorithm.hpp"
 
+#include "ResPlotTool.hpp"
+#include "RootTrackFitterPerformanceWriter.hpp"
+
 
 #include <algorithm>
 #include "ActsPython/Utilities/Macros.hpp"
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+
+namespace py = pybind11;
+using namespace pybind11::literals;
 
 
 namespace AliceActsPython {
@@ -47,6 +53,24 @@ inline void addExampleAlgorithm(pybind11::module& mex) {
                                   inputTrackCollections, inputIndexingMaps,
                                   outputTrackCollection);
   }
+
+  inline void addResPlotTool(pybind11::module& mex) {
+    py::class_<AliceActsTrk::ResPlotTool::Config>(mex, "ResPlotToolConfig")
+      .def(py::init<>())
+      .def_readwrite("varBinning", &AliceActsTrk::ResPlotTool::Config::varBinning);
+  }
+
+  inline void addRootTrackFitterPerformanceWriter(pybind11::module& mex) {
+
+    ACTS_PYTHON_DECLARE_WRITER(AliceActsTrk::RootTrackFitterPerformanceWriter, mex,
+                               "RootTrackFitterPerformanceWriter", inputTracks,
+                               inputParticles, inputTrackParticleMatching,
+                               filePath, resPlotToolConfig, effPlotToolConfig,
+                               trackSummaryPlotToolConfig);
+    
+  }
+  
+  
   
 
 }  // namespace AliceActsPython

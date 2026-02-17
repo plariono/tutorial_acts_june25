@@ -17,6 +17,7 @@ cfg = ChainConfig.Config()
 from AliceActsPythonBindings import TrackTruthMatcher
 from AliceActsPythonBindings import HitRemoverAlgorithm
 from AliceActsPythonBindings import TrackMergerAlgorithm
+from AliceActsPythonBindings import RootTrackFitterPerformanceWriter
 
 #Alice3 seeding
 import alice3.performance.seeding as alice3_seeding
@@ -278,15 +279,19 @@ def addTrackWriters(
 
         if writeFitterPerformance:
 
+
+            
+            cfg = RootTrackFitterPerformanceWriter.Config()
+            cfg.inputTracks = tracks
+            cfg.inputParticles = "particles_selected"
+            cfg.inputTrackParticleMatching="track_particle_matching"
+            cfg.resPlotToolConfig = alice3_plotting.resPlotToolConfig
+            cfg.filePath=str(outputDirRoot / f"performance_fitting_{name}.root")
+            
             trackFitterPerformanceWriter = (
-                acts.examples.root.RootTrackFitterPerformanceWriter(
-                    level=customLogLevel(),
-                    inputTracks=tracks,
-                    inputParticles="particles_selected",
-                    inputTrackParticleMatching="track_particle_matching",
-                    resPlotToolConfig = alice3_plotting.resPlotToolConfig,
-                    filePath=str(outputDirRoot / f"performance_fitting_{name}.root"),
-                )
+                RootTrackFitterPerformanceWriter(
+                    cfg,
+                    level=customLogLevel())
             )
             s.addWriter(trackFitterPerformanceWriter)
 
