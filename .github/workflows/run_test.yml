@@ -19,11 +19,10 @@ jobs:
       matrix:
         LCG: ["LCG_108/x86_64-el9-gcc14-opt",  
               "LCG_107/x86_64-el9-gcc13-opt"]  
-    steps:
-    
+    steps:    
     - uses: actions/checkout@v4
       env:
-        GITLAB_TOKEN: ${{ secrets.glpat-YGMsYRMQg8SPShrxMdfDqW86MQp1OjJnbG4K.01.100xfd1cc }}
+        GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
       run: |
         git config --global url."https://oauth2:${GITLAB_TOKEN}@gitlab.cern.ch/".insteadOf "https://gitlab.cern.ch/"
         git submodule update --init --recursive
