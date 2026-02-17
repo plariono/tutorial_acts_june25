@@ -19,8 +19,9 @@ jobs:
       matrix:
         LCG: ["LCG_108/x86_64-el9-gcc14-opt",  
               "LCG_107/x86_64-el9-gcc13-opt"]  
-    steps:    
+    steps:
     - uses: actions/checkout@v4
+    - name: Configure Git for submodules
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
       run: |
