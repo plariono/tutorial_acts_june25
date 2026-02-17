@@ -53,4 +53,5 @@ jobs:
           cmake -DCMAKE_PREFIX_PATH=${PWD}/../acts/install ..
           make -j2
           cd ..
-          python full_chain_alice3_tutorial.py -n 100
+          python alice3_full_chain.py
+
