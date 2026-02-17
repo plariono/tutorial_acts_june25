@@ -1,3 +1,4 @@
 [submodule "geometries"]
 	path = geometries
-	url = ssh://git@gitlab.cern.ch:7999/alice3-trackers/wp1-simulationsandperformances/acts/geometries.git
+	url = https://gitlab.cern.ch/pibutti/geometries.git
+	branch = tidy
