@@ -27,5 +27,6 @@ target_include_directories(Validation
 target_link_libraries(Validation
     PUBLIC
     Acts::Core
+    Acts::PluginRoot
     ${CMAKE_PREFIX_PATH}/lib64/libActsExamplesFramework.so
   )
