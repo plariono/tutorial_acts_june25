@@ -191,7 +191,7 @@ if not cfg.pythia.usePythia:
 
 else:
 
-    s = alice3_generator.addPythia8(
+    s = alice3_generator.addAlice3Pythia8(
         s,
         rnd=rnd,
         outputDir=outputDir)
