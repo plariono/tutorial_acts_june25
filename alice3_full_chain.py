@@ -40,11 +40,16 @@ from acts.examples.simulation import (
     addDigiParticleSelection,
 )
 
+import pathlib
+import acts
+import acts.examples
+import acts.examples.geant4
+
 # To automatically unzip stuff
 from zipfile import ZipFile
 
 # Move it to an utility tool
-def unzipFile(zipfile : Path):
+def unzipFile(zipfile : pathlib.Path):
     if zipfile.exists():
         # unzip
         with ZipFile(zipfile, 'r') as zip_ref:
@@ -54,10 +59,7 @@ def unzipFile(zipfile : Path):
         raise FileNotFoundError(f"{zipfile} doesn't exist!")
 
 
-import pathlib
-import acts
-import acts.examples
-import acts.examples.geant4
+
 
 import alice3.performance.generator as alice3_generator
 import alice3.performance.writers as alice3_writers
@@ -228,8 +230,8 @@ elif cfg.detSim.simulation == "Geant4":
     if not alice3_gdml.exists():
         unzipFile(geo_dir / "o2sim_geometry.gdml.zip")
         
-
-        gdml_detector = acts.examples.geant4.GdmlDetector(path=str(alice3_gdml))
+        
+    gdml_detector = acts.examples.geant4.GdmlDetector(path=str(alice3_gdml))
 
     addGeant4(
         s,
