@@ -128,7 +128,7 @@ def addAlice3Pythia8(
     s = addPythia8(
         s,
         npileup=cfg.pythia.pileup,
-        beam=acts.PdgParticle.eProton,
+        beam=beam[0],
         cmsEnergy=cmsEnergy,
         hardProcess=hardProcess,
         pileupProcess=pileupProcess,
