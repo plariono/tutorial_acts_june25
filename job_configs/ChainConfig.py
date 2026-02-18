@@ -4,7 +4,8 @@ from dataclasses import dataclass
 
 @dataclass
 class General:
-    fieldMap: str = "fieldmaps/solenoid_R1625_L7500_B2T_scaled.txt"
+    # fieldMap: str = "fieldmaps/solenoid_R1625_L7500_B2T_scaled.txt"
+    fieldMap: str = "geometries/magneticFieldMaps/fieldMap_Alice3_with_absorber_2T_solenoid_5-9-23.txt"
     MF: float = 2.0 #T
 
     #Geo 1
