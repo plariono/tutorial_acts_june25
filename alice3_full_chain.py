@@ -40,6 +40,20 @@ from acts.examples.simulation import (
     addDigiParticleSelection,
 )
 
+# To automatically unzip stuff
+from zipfile import ZipFile
+
+# Move it to an utility tool
+def unzipFile(zipfile : Path):
+    if zipfile.exists():
+        # unzip
+        with ZipFile(zipfile, 'r') as zip_ref:
+            zip_ref.extractall(zipfile.parent)
+            print(f"Extracted {zipfile}...")
+    else:
+        raise FileNotFoundError(f"{zipfile} doesn't exist!")
+
+
 import pathlib
 import acts
 import acts.examples
@@ -140,11 +154,6 @@ detector = buildALICE3Geometry.buildALICE3Geometry(
 trackingGeometry = detector.trackingGeometry()
 decorators = detector.contextDecorators()
 
-alice3_gdml = geo_dir / "o2sim_geometry.gdml"
-gdml_detector = acts.examples.geant4.GdmlDetector(path=str(alice3_gdml))
-
-
-
 if cfg.general.fieldMap != "":
     print(">>> !", cfg.general.fieldMap, "field map is used in this sim+rec run.")
     with open(cfg.general.fieldMap) as magFile:  # Checking if it's RZ or XYZ coordinates
@@ -190,7 +199,7 @@ addGenParticleSelection(
     s,
     ParticleSelectorConfig(
         eta=(-cfg.detSim.particleSelectionEta, cfg.detSim.particleSelectionEta),
-        pt=(0.001 * u.MeV, None),
+        pt=(0.05 * u.MeV, None),
         removeNeutral=False,
         # rho=(0.0, 24 * u.mm),
         # absZ=(0.0, 1.0 * u.m),
@@ -211,6 +220,17 @@ if cfg.detSim.simulation == "Fatras":
     )
     
 elif cfg.detSim.simulation == "Geant4":
+
+
+    alice3_gdml = geo_dir / "o2sim_geometry.gdml"
+    
+    #Check if we need to unzip
+    if not alice3_gdml.exists():
+        unzipFile(geo_dir / "o2sim_geometry.gdml.zip")
+        
+
+        gdml_detector = acts.examples.geant4.GdmlDetector(path=str(alice3_gdml))
+
     addGeant4(
         s,
         gdml_detector,
