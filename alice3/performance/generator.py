@@ -56,7 +56,7 @@ def addAlice3Pythia8(s : acts.examples.Sequencer = None,
                      rnd : acts.examples.RandomNumbers = None,
                      outputDir: Optional[Union[Path, str]] = None):
 
-    beam=None
+    beam=acts.PdgParticle.eProton
     hardProcess=[]
     cmsEnergy=0.
     if cfg.pythia.system == "pp":
