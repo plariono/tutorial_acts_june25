@@ -18,10 +18,19 @@ target_sources(ExampleAlgorithms
 target_include_directories(ExampleAlgorithms
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-#        $<INSTALL_INTERFACE:include>
 )
 
-#link_directories(${CMAKE_PREFIX_PATH}/lib64)
+      
+
+find_library(ACTS_EXAMPLES_FRAMEWORK
+    NAMES ActsExamplesFramework
+    PATHS ${CMAKE_PREFIX_PATH}
+    PATH_SUFFIXES lib lib64
+    REQUIRED
+)
+
+#message(STATUS "ACTS_EXAMPLES_FRAMEWORK: ${ACTS_EXAMPLES_FRAMEWORK}")
+
 
 # ----------------------------------------
 # Link against Acts
@@ -29,5 +38,5 @@ target_include_directories(ExampleAlgorithms
 target_link_libraries(ExampleAlgorithms
     PUBLIC
     Acts::Core
-    ${CMAKE_PREFIX_PATH}/lib64/libActsExamplesFramework.so
+    ${ACTS_EXAMPLES_FRAMEWORK}
   )

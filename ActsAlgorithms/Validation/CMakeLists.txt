@@ -19,6 +19,13 @@ target_include_directories(Validation
 #        $<INSTALL_INTERFACE:include>
 )
 
+find_library(ACTS_EXAMPLES_FRAMEWORK
+    NAMES ActsExamplesFramework
+    PATHS ${CMAKE_PREFIX_PATH}
+    PATH_SUFFIXES lib lib64
+    REQUIRED
+)
+
 #link_directories(${CMAKE_PREFIX_PATH}/lib64)
 
 # ----------------------------------------
@@ -27,6 +34,5 @@ target_include_directories(Validation
 target_link_libraries(Validation
     PUBLIC
     Acts::Core
-    Acts::PluginRoot
-    ${CMAKE_PREFIX_PATH}/lib64/libActsExamplesFramework.so
+    ${ACTS_EXAMPLES_FRAMEWORK}
   )
