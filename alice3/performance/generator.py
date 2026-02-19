@@ -68,6 +68,12 @@ def addAlice3Pythia8(s : acts.examples.Sequencer = None,
             "ParticleDecays:limitTau0 = on",
             "ParticleDecays:tau0Max = 10",
         ]  # tune 14 is Monash
+        pileupProcess=[
+            "SoftQCD:inelastic = on",
+            "Tune:pp = 14",
+            "ParticleDecays:limitTau0 = on",
+            "ParticleDecays:tau0Max = 10",
+        ]  # tune 14 is Monash
     elif cfg.pythia.system == "PbPbMB":
         beam=acts.PdgParticle.eLead,
         cmsEnergy=5.36 * acts.UnitConstants.TeV
@@ -79,12 +85,28 @@ def addAlice3Pythia8(s : acts.examples.Sequencer = None,
                 "ParticleDecays:limitTau0 = on",
                 "ParticleDecays:tau0Max = 10",
             ]
+        pileupProcess=[ # MB as pileup process
+                "SoftQCD:inelastic = on",
+                "HeavyIon:SigFitErr =  0.02,0.02,0.1,0.05,0.05,0.0,0.1,0.0",
+                "HeavyIon:SigFitDefPar = 17.24,2.15,0.33,0.0,0.0,0.0,0.0,0.0",
+                "HeavyIon:SigFitNGen = 20",
+                "ParticleDecays:limitTau0 = on",
+                "ParticleDecays:tau0Max = 10",
+        ]
     elif cfg.pythia.system == "PbPbCentral":
         beam=acts.PdgParticle.eLead
         cmsEnergy=5.36 * acts.UnitConstants.TeV
         hardProcess=[
                 "SoftQCD:inelastic = on",
                 "HeavyIon:bWidth=0.1",
+                "HeavyIon:SigFitErr =  0.02,0.02,0.1,0.05,0.05,0.0,0.1,0.0",
+                "HeavyIon:SigFitDefPar = 17.24,2.15,0.33,0.0,0.0,0.0,0.0,0.0",
+                "HeavyIon:SigFitNGen = 20",
+                "ParticleDecays:limitTau0 = on",
+                "ParticleDecays:tau0Max = 10",
+        ]
+        pileupProcess=[ # MB as pileup process
+                "SoftQCD:inelastic = on",
                 "HeavyIon:SigFitErr =  0.02,0.02,0.1,0.05,0.05,0.0,0.1,0.0",
                 "HeavyIon:SigFitDefPar = 17.24,2.15,0.33,0.0,0.0,0.0,0.0,0.0",
                 "HeavyIon:SigFitNGen = 20",
@@ -99,8 +121,10 @@ def addAlice3Pythia8(s : acts.examples.Sequencer = None,
     s = addPythia8(
         s,
         npileup=cfg.pythia.pileup,
-        beam = beam,
+        beam = beam[0],
         cmsEnergy = cmsEnergy,
+        hardProcess = hardProcess,
+        pileupProcess = pileupProcess,
         vtxGen=acts.examples.GaussianVertexGenerator(
             stddev=acts.Vector4(
                 0.000125 * u.mm,
