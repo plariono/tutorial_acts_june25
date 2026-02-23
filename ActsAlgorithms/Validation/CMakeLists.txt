@@ -34,5 +34,6 @@ find_library(ACTS_EXAMPLES_FRAMEWORK
 target_link_libraries(Validation
     PUBLIC
     Acts::Core
+    Acts::PluginRoot
     ${ACTS_EXAMPLES_FRAMEWORK}
   )
