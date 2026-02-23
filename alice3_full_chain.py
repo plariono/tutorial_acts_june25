@@ -65,6 +65,7 @@ import alice3.performance.generator as alice3_generator
 import alice3.performance.writers as alice3_writers
 import alice3.performance.seeding as alice3_seeding
 import alice3.performance.plotting as alice3_plotting
+import alice3.performance.simulation as alice3_simulation
 
 #from acts import UnitConstants as u
 
@@ -273,7 +274,9 @@ s = addDigitization(
     # doMerge=True,   ##!! 
 )
 
-addDigiParticleSelection(
+
+print("PF:: Adding the DigiParticleSelection")
+alice3_simulation.addDigiParticleSelection(
     s,
     ParticleSelectorConfig(
     eta=(-4.1,4.1), pt=(1 * u.MeV, None), removeNeutral=True,
@@ -281,6 +284,7 @@ addDigiParticleSelection(
         # rho=(0.0, 24 * u.mm),
     # absZ=(0.0, 1.0 * u.m),
     ),
+    measurementLayers=[(21,10)]
 )
 
 # s = addHoughVertexFinding(
