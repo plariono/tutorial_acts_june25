@@ -1,5 +1,5 @@
-from typing import Literal,Tuple
-from dataclasses import dataclass
+from typing import Literal,Tuple, List
+from dataclasses import dataclass,field
 
 
 @dataclass
@@ -9,12 +9,12 @@ class General:
     MF: float = 2.0 #T
 
     #Geo 1
-    geo_dir: str = "geometries/geometry_2026_01_30_mockupTiledDisks_for_Geant_tests/geom"
-    digi_file: str = "geometries/geometry_2026_01_30_mockupTiledDisks_for_Geant_tests/digiConfigurations/digi-smearing-config_no_TOFs_iTOF_removed.json"
+    #geo_dir: str = "geometries/geometry_2026_01_30_mockupTiledDisks_for_Geant_tests/geom"
+    #digi_file: str = "geometries/geometry_2026_01_30_mockupTiledDisks_for_Geant_tests/digiConfigurations/digi-smearing-config_no_TOFs_iTOF_removed.json"
 
     # Geo 2
-    #geo_dir: str = "geometries/geometry_2026_02_12_default_v3_cylindrical_barrel_tiled_disks/geom"
-    #digi_file: str = "geometries/geometry_2026_02_12_default_v3_cylindrical_barrel_tiled_disks/digiConfigurations/digi-smearing-config_with_TOFs_noEndcapTOFs_noTimeInTOFs.json"
+    geo_dir: str = "geometries/geometry_2026_02_12_default_v3_cylindrical_barrel_tiled_disks/geom"
+    digi_file: str = "geometries/geometry_2026_02_12_default_v3_cylindrical_barrel_tiled_disks/digiConfigurations/digi-smearing-config_with_TOFs_noEndcapTOFs_noTimeInTOFs.json"
 
     enableMaterial : bool = True
     doIterativeTracking : bool = False
@@ -22,8 +22,8 @@ class General:
 @dataclass
 class ParticleGunConfig:
     gunMult: int = 1
-    gunPtRange: Tuple[float,float]  = (0.1,5.0)
-    gunEtaRange: Tuple[float,float] = (-2.5,2.5)
+    gunPtRange: Tuple[float,float]  = (1.0,1.00001)
+    gunEtaRange: Tuple[float,float] = (-3,3)
     gunPhiRange: Tuple[float,float] = (-3.1415926, 3.1415926)
     gunPID: int = 211
     gunRandCharge: bool = True
@@ -43,6 +43,7 @@ class detSimConfig:
     simulation: Literal["Fatras","Geant4"] = "Geant4"
     minFatrasPt: float = 0.001
     particleSelectionEta: float = 4.2
+    particleSelectionLayers: List[Tuple[int,int]] = field(default_factory=list)  # [volume,layer], layer 7 is [(21,10)] => field(default_factory=lambda: [(21, 10)])
 
 @dataclass
 class seedingConfig:

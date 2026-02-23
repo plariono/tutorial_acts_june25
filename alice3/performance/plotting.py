@@ -6,14 +6,30 @@ from AliceActsPythonBindings import ResPlotToolConfig
 #Residual Plots
 
 resPlotToolConfig = ResPlotToolConfig()
-binning = resPlotToolConfig.varBinning
-binning["Eta"] = acts.examples.root.AxisVariant.regular(80, -4,    4,     "#eta")
-binning["Pt"] =  acts.examples.root.AxisVariant.regular(1000, -0,    50,     "pT [GeV/c]")
-binning["Residual_phi"] =  acts.examples.root.AxisVariant.regular(200, -0.02,    0.02,     "r_{#phi} [rad]")
-binning["Residual_theta"] =  acts.examples.root.AxisVariant.regular(200, -0.02,    0.02,     "r_{#theta} [rad]")
-binning["Residual_qop"] =  acts.examples.root.AxisVariant.regular(200, -0.2,    0.2,     "r_{q/p} [c/GeV]")
-binning["Residual_pt_o_pt"] =  acts.examples.root.AxisVariant.regular(100, -0.1,    0.1,     "r_{p_{T}}/p_{T}")
-resPlotToolConfig.varBinning = binning
+#resPlotToolConfig = acts.examples.root.ResPlotToolConfig()
+#binning = resPlotToolConfig.varBinning
+#binning["Eta"] = acts.examples.root.AxisVariant.regular(80, -4,    4,     "#eta")
+#binning["Pt"] =  acts.examples.root.AxisVariant.regular(1000, -0,    50,     "pT [GeV/c]")
+#binning["Residual_phi"] =  acts.examples.root.AxisVariant.regular(200, -0.02,    0.02,     "r_{#phi} [rad]")
+#binning["Residual_theta"] =  acts.examples.root.AxisVariant.regular(200, -0.02,    0.02,     "r_{#theta} [rad]")
+#binning["Residual_qop"] =  acts.examples.root.AxisVariant.regular(200, -0.2,    0.2,     "r_{q/p} [c/GeV]")
+#binning["Residual_pt_o_pt"] =  acts.examples.root.AxisVariant.regular(100, -0.1,    0.1,     "r_{p_{T}}/p_{T}")
+#resPlotToolConfig.varBinning = binning
+
+resPlotToolConfig.varBinning = {
+    "Eta":             acts.examples.root.AxisVariant.regular(80,   -4,    4,     "#eta"),
+    "Pt":              acts.examples.root.AxisVariant.regular(1000,  0,    50,    "pT [GeV/c]"),
+    "Residual_phi":    acts.examples.root.AxisVariant.regular(200,  -0.02, 0.02,  "r_{#phi} [rad]"),
+    "Residual_theta":  acts.examples.root.AxisVariant.regular(200,  -0.02, 0.02,  "r_{#theta} [rad]"),
+    "Residual_qop":    acts.examples.root.AxisVariant.regular(200,  -0.2,  0.2,   "r_{q/p} [c/GeV]"),
+    "Residual_pt_o_pt":acts.examples.root.AxisVariant.regular(100,  -0.1,  0.1,   "r_{p_{T}}/p_{T}"),
+    "Pull":            acts.examples.root.AxisVariant.regular(100,  -5,    5,     "pull"),
+    "Residual_d0":     acts.examples.root.AxisVariant.regular(100,  -0.5,  0.5,   "r_{d0} [mm]"),
+    "Residual_z0":     acts.examples.root.AxisVariant.regular(100,  -0.5,  0.5,   "r_{z0} [mm]"),
+    "Residual_t":      acts.examples.root.AxisVariant.regular(100,  -1000, 1000,  "r_{t} [s]"),
+}
+
+
 
 # Duplication Plots
 duplicationPlotToolConfig = acts.examples.root.DuplicationPlotToolConfig()

@@ -74,8 +74,7 @@ def addDigiParticleSelection(
     
     selector = acts.examples.ParticleSelector(
         config=cfg,
-        #level=customLogLevel(),
-        level=acts.logging.DEBUG,
+        level=customLogLevel(),
     )
     
     s.addAlgorithm(selector)

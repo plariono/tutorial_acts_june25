@@ -262,7 +262,6 @@ elif cfg.detSim.simulation == "Geant4":
 #     ),
 # )
 
-
 s = addDigitization(
     s,
     trackingGeometry,
@@ -279,12 +278,13 @@ print("PF:: Adding the DigiParticleSelection")
 alice3_simulation.addDigiParticleSelection(
     s,
     ParticleSelectorConfig(
-    eta=(-4.1,4.1), pt=(1 * u.MeV, None), removeNeutral=True,
+        eta=(-cfg.detSim.particleSelectionEta, cfg.detSim.particleSelectionEta),
+        pt=(1 * u.MeV, None), removeNeutral=True,
         hits=(7, None),
         # rho=(0.0, 24 * u.mm),
     # absZ=(0.0, 1.0 * u.m),
     ),
-    measurementLayers=[(21,10)]
+    measurementLayers=cfg.detSim.particleSelectionLayers,
 )
 
 # s = addHoughVertexFinding(

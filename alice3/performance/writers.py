@@ -278,23 +278,37 @@ def addTrackWriters(
             s.addWriter(trackStatesWriter)
 
         if writeFitterPerformance:
-
-
-            
+                        
             cfg = RootTrackFitterPerformanceWriter.Config()
             cfg.inputTracks = tracks
             cfg.inputParticles = "particles_selected"
             cfg.inputTrackParticleMatching="track_particle_matching"
             cfg.resPlotToolConfig = alice3_plotting.resPlotToolConfig
             cfg.filePath=str(outputDirRoot / f"performance_fitting_{name}.root")
+
+            #print("PF:: ResPlotToolConfig")
+            #print(cfg.resPlotToolConfig.varBinning["Eta"].bins)
             
             trackFitterPerformanceWriter = (
                 RootTrackFitterPerformanceWriter(
                     cfg,
                     level=customLogLevel())
             )
+            '''
+            trackFitterPerformanceWriter = (
+                acts.examples.root.RootTrackFitterPerformanceWriter(
+                    level=customLogLevel(),
+                    inputTracks=tracks,
+                    inputParticles="particles_selected",
+                    inputTrackParticleMatching="track_particle_matching",
+                    resPlotToolConfig = alice3_plotting.resPlotToolConfig,
+                    filePath=str(outputDirRoot / f"performance_fitting_{name}.root"),
+                )
+            )
+            '''
+            
             s.addWriter(trackFitterPerformanceWriter)
-
+            
         if writeFinderPerformance:
 
             trackFinderPerfWriter = acts.examples.root.RootTrackFinderPerformanceWriter(

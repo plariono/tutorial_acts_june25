@@ -53,6 +53,9 @@ class ResPlotTool {
         {"Residual_pt_o_pt", BoostRegularAxis(100,-0.01,0.01,"r_{p_T} / p_T")},
         {"Residual_qop", BoostRegularAxis(100, -0.1, 0.1, "r_{q/p} [c/GeV]")},
         {"Residual_t", BoostRegularAxis(100, -1000, 1000, "r_{t} [s]")}};
+
+    std::vector<float> etaBins{0., 0.1, 0.5, 1.5, 2.0, 2.5, 4.0};
+    
   };
 
   /// Constructor

@@ -15,6 +15,8 @@
 
 #include <cmath>
 #include <format>
+#include <iomanip>
+#include <sstream>
 
 using namespace ActsExamples;
 
@@ -78,7 +80,33 @@ ResPlotTool::ResPlotTool(const ResPlotTool::Config& cfg,
   m_res.emplace("res_pt_o_pt", Acts::Experimental::Histogram1("res_pt_o_pt",
                                                               "Residual of pT over pT",
                                                               std::array{m_cfg.varBinning.at("Residual_pt_o_pt")}));
-                                                          
+
+  m_resVsEta.emplace("res_pt_o_pt_vs_eta", Acts::Experimental::Histogram2("res_pt_o_pt_vs_eta",
+                                                                          "Residual of pT over pT",
+                                                                          std::array{etaAxis,m_cfg.varBinning.at("Residual_pt_o_pt")}));
+  
+
+  for (unsigned int etaBin = 0; etaBin < m_cfg.etaBins.size() - 1; etaBin++) {
+
+
+    const auto& residualAxis = m_cfg.varBinning.at("Residual_pt_o_pt");
+    std::stringstream ss;
+    ss << std::fixed << std::setprecision(2) << m_cfg.etaBins[etaBin];
+    std::string etaBin_low  = ss.str();
+    ss.str("");
+
+    ss << std::fixed << std::setprecision(2) << m_cfg.etaBins[etaBin+1];
+    std::string etaBin_high  = ss.str();
+    ss.str("");
+    
+    std::string resName = "res_ptopt_"+etaBin_low+"_"+etaBin_high;
+      
+    m_resVsPt.emplace(resName, Acts::Experimental::Histogram2(resName,
+                                                              resName,
+                                                              std::array{ptAxis,residualAxis}));
+    
+  }
+  
 }
 
 void ResPlotTool::fill(const Acts::GeometryContext& gctx,
@@ -164,7 +192,7 @@ void ResPlotTool::fill(const Acts::GeometryContext& gctx,
   //}
   
   m_res.at("res_pt_o_pt").fill({rel_pt_residual});
-  
+  m_resVsEta.at("res_pt_o_pt_vs_eta").fill({truthEta,rel_pt_residual});
   
 }
   
