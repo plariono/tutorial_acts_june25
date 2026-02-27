@@ -43,6 +43,7 @@ class ResPlotTool {
     /// Binning info for variables
     std::map<std::string, AxisVariant> varBinning = {
         {"Eta", BoostRegularAxis(40, -4, 4, "#eta")},
+        {"Phi", BoostRegularAxis(70, -3.5, 3.5, "#phi")},
         {"Pt", BoostRegularAxis(40, 0, 100, "pT [GeV/c]")},
         {"Pull", BoostRegularAxis(100, -5, 5, "pull")},
         {"Residual_d0", BoostRegularAxis(100, -0.5, 0.5, "r_{d0} [mm]")},
@@ -55,6 +56,7 @@ class ResPlotTool {
         {"Residual_t", BoostRegularAxis(100, -1000, 1000, "r_{t} [s]")}};
 
     std::vector<float> etaBins{0., 0.1, 0.5, 1.5, 2.0, 2.5, 4.0};
+    std::vector<float> phiBins{0., 0.1, 0.5, 1.5, 2.0, 2.5, 4.0};
     
   };
 
@@ -78,10 +80,16 @@ class ResPlotTool {
   const std::map<std::string, Histogram2>& resVsEta() const {
     return m_resVsEta;
   }
+  const std::map<std::string, Histogram2>& resVsPhi() const {
+    return m_resVsPhi;
+  }
   const std::map<std::string, Histogram2>& resVsPt() const { return m_resVsPt; }
   const std::map<std::string, Histogram1>& pull() const { return m_pull; }
   const std::map<std::string, Histogram2>& pullVsEta() const {
     return m_pullVsEta;
+  }
+  const std::map<std::string, Histogram2>& pullVsPhi() const {
+    return m_pullVsPhi;
   }
   const std::map<std::string, Histogram2>& pullVsPt() const {
     return m_pullVsPt;
@@ -97,6 +105,8 @@ class ResPlotTool {
   std::map<std::string, Histogram1> m_res;
   /// Residual vs eta scatter plot
   std::map<std::string, Histogram2> m_resVsEta;
+  /// Residual vs phi scatter plot
+  std::map<std::string, Histogram2> m_resVsPhi;
   /// Residual vs pT scatter plot
   std::map<std::string, Histogram2> m_resVsPt;
 
@@ -104,6 +114,8 @@ class ResPlotTool {
   std::map<std::string, Histogram1> m_pull;
   /// Pull vs eta scatter plot
   std::map<std::string, Histogram2> m_pullVsEta;
+  /// Pull vs eta scatter plot
+  std::map<std::string, Histogram2> m_pullVsPhi;
   /// Pull vs pT scatter plot
   std::map<std::string, Histogram2> m_pullVsPt;
 };

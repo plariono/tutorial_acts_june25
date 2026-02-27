@@ -26,6 +26,7 @@ ResPlotTool::ResPlotTool(const ResPlotTool::Config& cfg,
                          Acts::Logging::Level lvl)
     : m_cfg(cfg), m_logger(Acts::getDefaultLogger("ResPlotTool", lvl)) {
   const auto& etaAxis = m_cfg.varBinning.at("Eta");
+  const auto& phiAxis = m_cfg.varBinning.at("Phi");
   const auto& ptAxis = m_cfg.varBinning.at("Pt");
   const auto& pullAxis = m_cfg.varBinning.at("Pull");
 
@@ -49,6 +50,13 @@ ResPlotTool::ResPlotTool(const ResPlotTool::Config& cfg,
                            std::format("Residual of {} vs eta", parName),
                            std::array{etaAxis, residualAxis}));
 
+    // residual vs phi scatter plots
+    m_resVsPhi.emplace(parName,
+                       Acts::Experimental::Histogram2(
+                           std::format("res_{}_vs_phi", parName),
+                           std::format("Residual of {} vs phi", parName),
+                           std::array{phiAxis, residualAxis}));
+
     // residual vs pT scatter plots
     m_resVsPt.emplace(parName, Acts::Experimental::Histogram2(
                                    std::format("res_{}_vs_pT", parName),
@@ -67,6 +75,12 @@ ResPlotTool::ResPlotTool(const ResPlotTool::Config& cfg,
                                      std::format("Pull of {} vs eta", parName),
                                      std::array{etaAxis, pullAxis}));
 
+    // pull vs eta scatter plots
+    m_pullVsPhi.emplace(parName, Acts::Experimental::Histogram2(
+                                     std::format("pull_{}_vs_phi", parName),
+                                     std::format("Pull of {} vs phi", parName),
+                                     std::array{phiAxis, pullAxis}));
+
     // pull vs pT scatter plots
     m_pullVsPt.emplace(parName, Acts::Experimental::Histogram2(
                                     std::format("pull_{}_vs_pT", parName),
@@ -80,8 +94,12 @@ ResPlotTool::ResPlotTool(const ResPlotTool::Config& cfg,
   m_res.emplace("res_pt_o_pt", Acts::Experimental::Histogram1("res_pt_o_pt",
                                                               "Residual of pT over pT",
                                                               std::array{m_cfg.varBinning.at("Residual_pt_o_pt")}));
-
+  
   m_resVsEta.emplace("res_pt_o_pt_vs_eta", Acts::Experimental::Histogram2("res_pt_o_pt_vs_eta",
+                                                                          "Residual of pT over pT",
+                                                                          std::array{etaAxis,m_cfg.varBinning.at("Residual_pt_o_pt")}));
+
+  m_resVsPhi.emplace("res_pt_o_pt_vs_phi", Acts::Experimental::Histogram2("res_pt_o_pt_vs_phi",
                                                                           "Residual of pT over pT",
                                                                           std::array{etaAxis,m_cfg.varBinning.at("Residual_pt_o_pt")}));
   
@@ -154,6 +172,7 @@ void ResPlotTool::fill(const Acts::GeometryContext& gctx,
   // get the truth eta and pT
   const auto truthEta = eta(truthParticle.direction());
   const auto truthPt = truthParticle.transverseMomentum();
+  const auto truthPhi = truthParameter[Acts::BoundIndices::eBoundPhi];
 
   // fill the histograms for residual and pull
   for (unsigned int parID = 0; parID < Acts::eBoundSize; parID++) {
@@ -161,6 +180,7 @@ void ResPlotTool::fill(const Acts::GeometryContext& gctx,
     double residual = trackParameter[parID] - truthParameter[parID];
     m_res.at(parName).fill({residual});
     m_resVsEta.at(parName).fill({truthEta, residual});
+    m_resVsPhi.at(parName).fill({truthPhi, residual});
     m_resVsPt.at(parName).fill({truthPt, residual});
 
     if (!fittedParamters.covariance().has_value()) {
@@ -180,6 +200,7 @@ void ResPlotTool::fill(const Acts::GeometryContext& gctx,
     double pull = residual / std::sqrt(covariance(parID, parID));
     m_pull.at(parName).fill({pull});
     m_pullVsEta.at(parName).fill({truthEta, pull});
+    m_pullVsPhi.at(parName).fill({truthPhi, pull});
     m_pullVsPt.at(parName).fill({truthPt, pull});
   }
 
@@ -193,6 +214,7 @@ void ResPlotTool::fill(const Acts::GeometryContext& gctx,
   
   m_res.at("res_pt_o_pt").fill({rel_pt_residual});
   m_resVsEta.at("res_pt_o_pt_vs_eta").fill({truthEta,rel_pt_residual});
+  m_resVsPhi.at("res_pt_o_pt_vs_phi").fill({truthPhi,rel_pt_residual});
   
 }
   

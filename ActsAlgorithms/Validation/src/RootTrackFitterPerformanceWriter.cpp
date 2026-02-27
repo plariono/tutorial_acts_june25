@@ -139,6 +139,9 @@ ProcessCode RootTrackFitterPerformanceWriter::finalize() {
   for (const auto& [name, hist] : m_resPlotTool.resVsEta()) {
     writeWithRefinement(*toRoot(hist), "resmean", "reswidth");
   }
+  for (const auto& [name, hist] : m_resPlotTool.resVsPhi()) {
+    writeWithRefinement(*toRoot(hist), "resmean", "reswidth");
+  }
   for (const auto& [name, hist] : m_resPlotTool.resVsPt()) {
     writeWithRefinement(*toRoot(hist), "resmean", "reswidth");
   }
@@ -148,6 +151,9 @@ ProcessCode RootTrackFitterPerformanceWriter::finalize() {
     toRoot(hist)->Write();
   }
   for (const auto& [name, hist] : m_resPlotTool.pullVsEta()) {
+    writeWithRefinement(*toRoot(hist), "pullmean", "pullwidth");
+  }
+  for (const auto& [name, hist] : m_resPlotTool.pullVsPhi()) {
     writeWithRefinement(*toRoot(hist), "pullmean", "pullwidth");
   }
   for (const auto& [name, hist] : m_resPlotTool.pullVsPt()) {
