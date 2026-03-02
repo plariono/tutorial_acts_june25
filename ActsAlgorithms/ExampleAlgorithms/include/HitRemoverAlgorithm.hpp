@@ -44,7 +44,7 @@ namespace AliceActsTrk {
       
     };
 
-    HitRemoverAlgorithm(Config cfg, Acts::Logging::Level lvl);
+    HitRemoverAlgorithm(Config cfg, std::unique_ptr<const Acts::Logger> logger);
     ProcessCode execute(const AlgorithmContext& ctx) const final;
 
     const Config& config() const { return m_cfg; }

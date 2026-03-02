@@ -5,8 +5,8 @@ using namespace ActsExamples;
 namespace AliceActsTrk {
 
   ExampleAlgorithm::ExampleAlgorithm(ExampleAlgorithm::Config cfg,
-                                     Acts::Logging::Level lvl)
-    : IAlgorithm("ExampleAlgorithm", lvl), m_cfg(std::move(cfg)) {
+                                     std::unique_ptr<const Acts::Logger> logger)
+    : IAlgorithm("ExampleAlgorithm", std::move(logger)), m_cfg(std::move(cfg)) {
     
     std::cout<<"PF:: Constructed ExampleAlgorithm"<<std::endl;
   }

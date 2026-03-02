@@ -61,14 +61,23 @@ inline void addExampleAlgorithm(pybind11::module& mex) {
   }
 
   inline void addRootTrackFitterPerformanceWriter(pybind11::module& mex) {
-
     ACTS_PYTHON_DECLARE_WRITER(AliceActsTrk::RootTrackFitterPerformanceWriter, mex,
                                "RootTrackFitterPerformanceWriter", inputTracks,
                                inputParticles, inputTrackParticleMatching,
                                filePath, resPlotToolConfig, effPlotToolConfig,
                                trackSummaryPlotToolConfig);
-    
   }
+
+  // inline void addRootTrackFinderPerformanceWriter(pybind11::module& mex) {
+  //   ACTS_PYTHON_DECLARE_WRITER(AliceActsTrk::RootTrackFinderPerformanceWriter, mex,
+  //                              "RootTrackFinderPerformanceWriter", inputTracks,
+  //                              inputParticles, inputTrackParticleMatching,
+  //                              inputParticleTrackMatching, inputParticleMeasurementsMap,
+  //                              filePath, fileMode, effPlotToolConfig, fakePlotToolConfig,
+  //                              duplicationPlotToolConfig, trackSummaryPlotToolConfig,
+  //                              trackQualityPlotToolConfig, subDetectorTrackSummaryVolumes,
+  //                              writeMatchingDetails);
+  // }
   
   
   

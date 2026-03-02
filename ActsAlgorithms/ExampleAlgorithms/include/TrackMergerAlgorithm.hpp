@@ -30,8 +30,8 @@ namespace AliceActsTrk {
       std::string outputTrackCollection = "";
     };
 
-    TrackMergerAlgorithm(Config cfg, Acts::Logging::Level lvl);
-    ActsExamples::ProcessCode execute(const AlgorithmContext& ctx) const final;
+    TrackMergerAlgorithm(Config cfg, std::unique_ptr<const Acts::Logger> _logger);
+    ProcessCode execute(const AlgorithmContext& ctx) const final;
 
     const Config& config() const {return m_cfg;}
 
