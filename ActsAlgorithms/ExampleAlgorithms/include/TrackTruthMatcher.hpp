@@ -51,7 +51,7 @@ class TrackTruthMatcher final : public IAlgorithm {
     size_t loop_maxParticleHits = 0;
   };
 
-  TrackTruthMatcher(const Config& config, Acts::Logging::Level level);
+  TrackTruthMatcher(const Config& config, std::unique_ptr<const Acts::Logger> logger);
 
   ProcessCode execute(const AlgorithmContext& ctx) const final;
 
@@ -71,4 +71,4 @@ class TrackTruthMatcher final : public IAlgorithm {
       this, "OutputParticleTrackMatching"};
 };
 
-}  // namespace ActsExamples
+}  // namespace AliceActsTrk

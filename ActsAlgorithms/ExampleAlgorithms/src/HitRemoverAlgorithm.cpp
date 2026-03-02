@@ -8,8 +8,8 @@ using namespace ActsExamples;
 namespace AliceActsTrk {
 
   HitRemoverAlgorithm::HitRemoverAlgorithm(HitRemoverAlgorithm::Config cfg,
-                                           Acts::Logging::Level lvl)
-    : IAlgorithm("HitRemoverAlgorithm", lvl), m_cfg(std::move(cfg)) {
+                                           std::unique_ptr<const Acts::Logger> logger)
+    : IAlgorithm("HitRemoverAlgorithm", std::move(logger)), m_cfg(std::move(cfg)) {
 
     if (m_cfg.inputMeasurements.empty()) {
       throw std::invalid_argument("Missing input hit collection");

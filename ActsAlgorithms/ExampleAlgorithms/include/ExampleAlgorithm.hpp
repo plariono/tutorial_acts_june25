@@ -24,7 +24,7 @@ namespace AliceActsTrk {
     };
   
     
-    ExampleAlgorithm(Config cfg, Acts::Logging::Level lvl);
+    ExampleAlgorithm(Config cfg, std::unique_ptr<const Acts::Logger> logger);
     
     ActsExamples::ProcessCode execute(const AlgorithmContext& ctx) const final;
     

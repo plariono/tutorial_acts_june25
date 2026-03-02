@@ -9,8 +9,8 @@ using namespace ActsExamples;
 namespace AliceActsTrk {
 
   TrackMergerAlgorithm::TrackMergerAlgorithm(TrackMergerAlgorithm::Config cfg,
-                                              Acts::Logging::Level lvl)
-    : IAlgorithm("TrackMergerAlgorithm", lvl), m_cfg(std::move(cfg)) {
+                                              std::unique_ptr<const Acts::Logger> _logger)
+    : IAlgorithm("TrackMergerAlgorithm", std::move(_logger)), m_cfg(std::move(cfg)) {
   
 
 
