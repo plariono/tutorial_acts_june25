@@ -33,6 +33,7 @@ class ResPlotTool {
   using BoostRegularAxis = Acts::Experimental::BoostRegularAxis;
   using Histogram1 = Acts::Experimental::Histogram1;
   using Histogram2 = Acts::Experimental::Histogram2;
+  using Histogram3 = Acts::Experimental::Histogram3;
 
   /// @brief Nested configuration struct
   struct Config {
@@ -83,6 +84,9 @@ class ResPlotTool {
   const std::map<std::string, Histogram2>& resVsPhi() const {
     return m_resVsPhi;
   }
+  const std::map<std::string, Histogram3>& resVsEtaVsPhi() const {
+    return m_resVsEtaVsPhi;
+  }
   const std::map<std::string, Histogram2>& resVsPt() const { return m_resVsPt; }
   const std::map<std::string, Histogram1>& pull() const { return m_pull; }
   const std::map<std::string, Histogram2>& pullVsEta() const {
@@ -110,6 +114,9 @@ class ResPlotTool {
   /// Residual vs pT scatter plot
   std::map<std::string, Histogram2> m_resVsPt;
 
+  /// Residual vs eta vs phi scatter plot
+  std::map<std::string, Histogram3> m_resVsEtaVsPhi;
+
   /// Pull distribution
   std::map<std::string, Histogram1> m_pull;
   /// Pull vs eta scatter plot
@@ -118,6 +125,7 @@ class ResPlotTool {
   std::map<std::string, Histogram2> m_pullVsPhi;
   /// Pull vs pT scatter plot
   std::map<std::string, Histogram2> m_pullVsPt;
+  
 };
 
 }  // namespace ActsExamples

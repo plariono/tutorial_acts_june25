@@ -102,6 +102,11 @@ ResPlotTool::ResPlotTool(const ResPlotTool::Config& cfg,
   m_resVsPhi.emplace("res_pt_o_pt_vs_phi", Acts::Experimental::Histogram2("res_pt_o_pt_vs_phi",
                                                                           "Residual of pT over pT",
                                                                           std::array{etaAxis,m_cfg.varBinning.at("Residual_pt_o_pt")}));
+
+
+  m_resVsEtaVsPhi.emplace("res_pt_o_pt_vs_eta_vs_phi", Acts::Experimental::Histogram3("res_pt_o_pt_vs_eta_vs_phi",
+                                                                                      "Residual of pT over pT",
+                                                                                      std::array{etaAxis,phiAxis,m_cfg.varBinning.at("Residual_pt_o_pt")}));
   
 
   for (unsigned int etaBin = 0; etaBin < m_cfg.etaBins.size() - 1; etaBin++) {
@@ -215,6 +220,7 @@ void ResPlotTool::fill(const Acts::GeometryContext& gctx,
   m_res.at("res_pt_o_pt").fill({rel_pt_residual});
   m_resVsEta.at("res_pt_o_pt_vs_eta").fill({truthEta,rel_pt_residual});
   m_resVsPhi.at("res_pt_o_pt_vs_phi").fill({truthPhi,rel_pt_residual});
+  m_resVsEtaVsPhi.at("res_pt_o_pt_vs_eta_vs_phi").fill({truthEta,truthPhi,rel_pt_residual});
   
 }
   
