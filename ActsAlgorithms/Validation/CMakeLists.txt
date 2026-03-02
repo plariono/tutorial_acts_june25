@@ -19,9 +19,10 @@ target_include_directories(Validation
 #        $<INSTALL_INTERFACE:include>
 )
 
+
 find_library(ACTS_EXAMPLES_FRAMEWORK
     NAMES ActsExamplesFramework
-    PATHS ${CMAKE_PREFIX_PATH}
+    HINTS ${CMAKE_PREFIX_PATH}
     PATH_SUFFIXES lib lib64
     REQUIRED
 )

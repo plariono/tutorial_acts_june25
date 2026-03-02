@@ -493,7 +493,7 @@ def addIterativeTracking(
                        trackCollectionForMerging,
                        outputIndexingMaps,
                        mergedTrackCollection,
-                       acts.logging.DEBUG,
+                       acts.logging.INFO,
                        )
         
 

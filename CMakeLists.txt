@@ -28,7 +28,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 
 # --- pybind11 dependency ---
-set(_acts_pybind11_version 2.13.1)
+set(_acts_pybind11_version 3.0.1)
 include(ExternSources)
 
 add_subdirectory(thirdparty/pybind11)

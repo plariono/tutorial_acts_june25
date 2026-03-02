@@ -20,16 +20,15 @@ target_include_directories(ExampleAlgorithms
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-      
 
 find_library(ACTS_EXAMPLES_FRAMEWORK
     NAMES ActsExamplesFramework
-    PATHS ${CMAKE_PREFIX_PATH}
+    HINTS ${CMAKE_PREFIX_PATH}
     PATH_SUFFIXES lib lib64
     REQUIRED
 )
 
-#message(STATUS "ACTS_EXAMPLES_FRAMEWORK: ${ACTS_EXAMPLES_FRAMEWORK}")
+message(STATUS "ACTS_EXAMPLES_FRAMEWORK: ${ACTS_EXAMPLES_FRAMEWORK}")
 
 
 # ----------------------------------------

@@ -18,6 +18,7 @@ resPlotToolConfig = ResPlotToolConfig()
 
 resPlotToolConfig.varBinning = {
     "Eta":             acts.examples.root.AxisVariant.regular(80,   -4,    4,     "#eta"),
+    "Phi":             acts.examples.root.AxisVariant.regular(70,   -3.5,  3.5,   "#phi"),
     "Pt":              acts.examples.root.AxisVariant.regular(1000,  0,    50,    "pT [GeV/c]"),
     "Residual_phi":    acts.examples.root.AxisVariant.regular(200,  -0.02, 0.02,  "r_{#phi} [rad]"),
     "Residual_theta":  acts.examples.root.AxisVariant.regular(200,  -0.02, 0.02,  "r_{#theta} [rad]"),
