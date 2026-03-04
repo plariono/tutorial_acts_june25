@@ -2,7 +2,7 @@ import os
 import sys
 
 from job_configs import ChainConfig
-from alice3_full_chain import run_full_chain, getArgumentParser
+from alice3_full_chain import runFullChain, getArgumentParser, runFullChain
 
 
 class SuppressOutput:
@@ -77,11 +77,11 @@ def run_pt_scan(pid=211, eta_range=(-1,1), output_prefix="pt_scan"):
         cfg.particleGun.gunEtaRange = eta_range  # Eta range
         
         # Modify output directory name to include scan info
-        args.out_dir_prefix = f"{output_prefix}/{pt_label}"
+        args.out_dir_prefix = f"{output_prefix}_{args.nEvents}/{pt_label}"
         
         # Run the full chain with modified config
         with SuppressOutput():
-            run_full_chain(config=cfg, args=args)
+            runFullChain(cfg=cfg, args=args)
 
         print(f"Completed scan point {i+1}/{len(pt_values)}")
     
