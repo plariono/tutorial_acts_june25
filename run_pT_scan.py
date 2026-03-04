@@ -77,7 +77,7 @@ def run_pt_scan(pid=211, eta_range=(-1,1), output_prefix="pt_scan"):
         cfg.particleGun.gunEtaRange = eta_range  # Eta range
         
         # Modify output directory name to include scan info
-        args.out_dir_prefix = f"{output_prefix}_{args.nEvents}/{pt_label}"
+        args.out_dir_prefix = f"{output_prefix}/{args.nEvents}Ev/{pt_label}"
         
         # Run the full chain with modified config
         with SuppressOutput():
