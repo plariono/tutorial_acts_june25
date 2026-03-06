@@ -1,5 +1,7 @@
 # ACTS Tutorial for ALICE 3 studies
 
+## Update 06.03.26 This is now a legacy repository, for the actual ALICE 3 ACTS tutorial material visit https://github.com/AliceO2Group/actsO2/
+
 ## Update 17.07.25: quick fix of the geometry issue
 In order to fix the issue with the IRIS geometry you need to replace the `toSurface` method in `source/Plugins/TGeo/include/Acts/Plugins/TGeo/TGeoSurfaceConverter.hpp` in the follwing way: 
 
